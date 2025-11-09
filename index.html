@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ShiftIntel - Driver Performance Tracker</title>
+  <title>Duddy - Driving Buddy Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     :root {
@@ -28,7 +28,7 @@
 
     body {
       margin: 0;
-      padding: 14px;
+      padding: 56px 14px 14px;
       background: radial-gradient(circle at top, #111827 0, #020817 42%, #000 100%);
       color: var(--text);
       display: flex;
@@ -43,6 +43,95 @@
       gap: var(--gap-lg);
     }
 
+    /* Top sticky bar */
+
+    .top-bar-wrap {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 40;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .top-bar {
+      pointer-events: auto;
+      margin: 6px 10px;
+      padding: 8px 12px;
+      max-width: 520px;
+      width: 100%;
+      border-radius: 999px;
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 60%) no-repeat,
+                  rgba(3,7,18,0.98);
+      box-shadow: 0 12px 40px rgba(15,23,42,0.9);
+      border: 1px solid rgba(56,189,248,0.24);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .top-status {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      font-size: 0.63rem;
+      color: var(--muted);
+      flex: 1;
+    }
+
+    .top-status-line {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      padding: 1px 7px;
+      border-radius: 999px;
+      font-size: 0.57rem;
+      border: 1px solid rgba(56,189,248,0.4);
+      color: var(--accent);
+      background: rgba(9,9,11,1);
+    }
+
+    .badge.off {
+      border-color: rgba(148,163,253,0.4);
+      color: #9ca3af;
+    }
+
+    .top-btn {
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.7rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(to right, var(--accent), #22c55e);
+      color: #020817;
+      box-shadow: 0 6px 18px rgba(56,189,248,0.32);
+      white-space: nowrap;
+    }
+
+    .top-btn.off {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(75,85,99,0.9);
+      box-shadow: none;
+    }
+
+    /* Header */
+
     .header {
       display: flex;
       flex-direction: column;
@@ -50,13 +139,13 @@
     }
 
     .title {
-      font-size: 1.9rem;
+      font-size: 1.6rem;
       font-weight: 700;
       letter-spacing: 0.02em;
     }
 
     .subtitle {
-      font-size: 0.9rem;
+      font-size: 0.86rem;
       color: var(--muted);
     }
 
@@ -68,8 +157,8 @@
     }
 
     .pill {
-      font-size: 0.66rem;
-      padding: 4px 8px;
+      font-size: 0.6rem;
+      padding: 3px 8px;
       border-radius: 999px;
       background: rgba(15, 23, 42, 0.9);
       color: var(--accent);
@@ -104,6 +193,8 @@
       margin-bottom: 4px;
     }
 
+    /* App buttons */
+
     .app-buttons {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -112,7 +203,7 @@
     }
 
     .app-btn {
-      padding: 10px 8px;
+      padding: 9px 8px;
       font-size: 0.9rem;
       border-radius: 16px;
       border: 1px solid rgba(75,85,99,0.9);
@@ -145,6 +236,8 @@
       box-shadow: 0 6px 16px rgba(15,23,42,0.8);
     }
 
+    /* Fields */
+
     .field-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -164,13 +257,13 @@
     }
 
     label {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       color: var(--muted);
     }
 
     input {
-      padding: 10px 10px;
-      font-size: 1.05rem;
+      padding: 9px 10px;
+      font-size: 1.02rem;
       border-radius: 14px;
       border: 1px solid rgba(75,85,99,0.9);
       background: rgba(5, 12, 25, 0.98);
@@ -193,18 +286,20 @@
       transform: translateY(-1px);
     }
 
+    /* Buttons */
+
     .btn-row {
       display: flex;
       gap: 8px;
-      margin-top: 2px;
+      margin-top: 4px;
       flex-wrap: wrap;
     }
 
     button {
-      padding: 11px 10px;
+      padding: 10px 10px;
       border-radius: 999px;
       border: none;
-      font-size: 1.02rem;
+      font-size: 0.98rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
@@ -216,29 +311,36 @@
     }
 
     .btn-primary {
-      flex: 1.6;
+      flex: 1.5;
       background: linear-gradient(to right, var(--accent), #22c55e);
       color: #020817;
-      box-shadow: 0 10px 26px rgba(56,189,248,0.32);
+      box-shadow: 0 10px 24px rgba(56,189,248,0.32);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 16px 40px rgba(56,189,248,0.42);
+      box-shadow: 0 16px 36px rgba(56,189,248,0.42);
     }
 
-    .btn-secondary {
-      flex: 1.2;
+    .btn-end,
+    .btn-patch {
+      flex: 1;
       background: rgba(9, 9, 11, 0.98);
-      color: var(--muted);
-      border: 1px solid rgba(75,85,99,0.9);
+      color: var(--accent);
+      border: 1px solid rgba(56,189,248,0.5);
+      font-size: 0.9rem;
     }
 
-    .btn-secondary:hover {
-      background: rgba(15,23,42,1);
-      color: var(--accent);
-      border-color: rgba(56,189,248,0.22);
+    .btn-end {
+      background: rgba(22, 163, 74, 0.16);
+      color: #22c55e;
+      border-color: #22c55e;
+    }
+
+    .btn-end:hover,
+    .btn-patch:hover {
       transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(15,23,42,0.9);
     }
 
     .btn-subtle {
@@ -246,7 +348,7 @@
       background: transparent;
       color: var(--danger);
       border: 1px solid rgba(75,85,99,0.9);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
     .btn-subtle:hover {
@@ -255,6 +357,8 @@
       transform: translateY(-1px);
     }
 
+    /* Stats */
+
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -262,7 +366,7 @@
     }
 
     .stat {
-      padding: 10px 10px 8px;
+      padding: 9px 10px 7px;
       border-radius: var(--radius-xl);
       background:
         radial-gradient(circle at top, var(--accent-soft), transparent 80%) no-repeat,
@@ -274,25 +378,27 @@
     }
 
     .stat-label {
-      font-size: 0.65rem;
+      font-size: 0.63rem;
       text-transform: uppercase;
       color: var(--muted);
       letter-spacing: 0.14em;
     }
 
     .stat-value {
-      font-size: 0.98rem;
+      font-size: 0.96rem;
       font-weight: 600;
-      margin-top: 2px;
-      line-height: 1.25;
+      margin-top: 1px;
+      line-height: 1.2;
     }
 
     .stat-note {
-      font-size: 0.7rem;
+      font-size: 0.66rem;
       color: var(--muted);
       margin-top: 2px;
-      max-width: 180px;
+      max-width: 200px;
     }
+
+    /* Entries */
 
     .entries-card {
       max-height: 280px;
@@ -309,9 +415,9 @@
 
     .entry-row {
       display: grid;
-      grid-template-columns: 0.9fr 0.9fr 1.4fr 0.8fr;
+      grid-template-columns: 0.9fr 0.9fr 1.3fr 0.9fr;
       gap: 4px;
-      padding: 6px 6px;
+      padding: 5px 6px;
       border-radius: 10px;
       background: rgba(9,9,11,1);
       align-items: center;
@@ -332,7 +438,7 @@
 
     .entry-row span.time,
     .entry-row span.dur {
-      font-size: 0.65rem;
+      font-size: 0.64rem;
     }
 
     .entry-row span.rate {
@@ -353,15 +459,15 @@
 
     .entry-row span.note {
       grid-column: 1 / 5;
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       color: #6b7280;
     }
 
     .entry-row span.edit,
     .entry-row span.delete {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       cursor: pointer;
-      opacity: 0.78;
+      opacity: 0.8;
     }
 
     .entry-row span.edit {
@@ -393,22 +499,23 @@
     }
 
     .helper {
-      font-size: 0.65rem;
+      font-size: 0.64rem;
       color: var(--muted);
-      margin-top: -2px;
     }
 
-    .running-label {
-      font-size: 0.7rem;
+    .run-label {
+      font-size: 0.68rem;
       color: var(--accent);
       margin-top: 2px;
     }
 
     .shift-summary {
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       color: var(--muted);
-      margin-top: 4px;
+      margin-top: 2px;
     }
+
+    /* Analytics */
 
     .analytics-tabs {
       display: flex;
@@ -418,12 +525,12 @@
     }
 
     .analytics-tab {
-      padding: 6px 10px;
+      padding: 5px 9px;
       border-radius: 999px;
       border: 1px solid rgba(75,85,99,0.9);
       background: transparent;
       color: var(--muted);
-      font-size: 0.7rem;
+      font-size: 0.64rem;
       cursor: pointer;
       transition: all var(--transition-fast);
     }
@@ -439,7 +546,7 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      font-size: 0.68rem;
+      font-size: 0.66rem;
       color: var(--muted);
     }
 
@@ -456,7 +563,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 1px;
     }
 
     .week-bar-fill {
@@ -467,7 +574,7 @@
     }
 
     .week-bar-label {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       color: var(--muted);
     }
 
@@ -492,7 +599,7 @@
       flex-wrap: wrap;
       gap: 6px;
       margin-top: 4px;
-      font-size: 0.63rem;
+      font-size: 0.6rem;
     }
 
     .legend-item {
@@ -502,144 +609,45 @@
     }
 
     .legend-swatch {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 4px;
       background: rgba(148,163,253,0.9);
     }
 
-    .timer-wrap {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .timer-label {
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .timer-value {
-      font-size: 1.6rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: var(--accent);
-    }
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.78);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-    }
-
-    .modal {
-      width: 100%;
-      max-width: 420px;
-      background: #020817;
-      border-radius: 18px;
-      padding: 14px;
-      box-shadow: 0 18px 60px rgba(15,23,42,0.9);
-      border: 1px solid rgba(56,189,248,0.25);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .modal-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .modal-text {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .modal-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .modal-btn {
-      padding: 8px 8px;
-      border-radius: 12px;
-      border: 1px solid rgba(75,85,99,0.9);
-      background: rgba(6,12,24,1);
-      color: var(--muted);
-      font-size: 0.75rem;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      transition: all var(--transition-fast);
-      align-items: flex-start;
-    }
-
-    .modal-btn span.label {
-      font-weight: 600;
-      color: var(--accent);
-      font-size: 0.8rem;
-    }
-
-    .modal-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 8px 22px rgba(15,23,42,0.9);
-      transform: translateY(-1px);
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-      margin-top: 6px;
-    }
-
-    .modal-cancel {
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(75,85,99,0.9);
-      background: transparent;
-      color: var(--muted);
-      font-size: 0.7rem;
-      cursor: pointer;
-    }
-
-    .modal-cancel:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
     @media (max-width: 400px) {
       .title {
-        font-size: 1.7rem;
-      }
-      .timer-value {
-        font-size: 1.4rem;
+        font-size: 1.5rem;
       }
     }
   </style>
 </head>
 <body>
+<div class="top-bar-wrap">
+  <div class="top-bar">
+    <div class="top-title">Duddy</div>
+    <div class="top-status">
+      <div class="top-status-line">
+        <div class="badge off" id="dutyBadge">OFF DUTY</div>
+        <div id="dutyInfo">Not tracking a shift.</div>
+      </div>
+      <div id="dutyHint">Tap Go on duty when you start your day.</div>
+    </div>
+    <button class="top-btn off" id="dutyToggleBtn">Go on duty</button>
+  </div>
+</div>
+
 <div class="app">
   <header class="header">
-    <div class="title">ShiftIntel</div>
+    <div class="title">Duddy</div>
     <div class="subtitle">
-      Start shift, see live timer, log runs fast, and track performance by shift, week, and all time.
+      Driving buddy for live shifts and simple stats. One tap on duty, one tap to log runs.
     </div>
     <div class="pill-row">
-      <div class="pill">Shift / Week / All time</div>
+      <div class="pill">Shift aware</div>
+      <div class="pill">Quick run logging</div>
       <div class="pill">Multi app</div>
-      <div class="pill">Auto run builder</div>
-      <div class="pill">Km and fuel aware</div>
+      <div class="pill">Km and fuel</div>
     </div>
   </header>
 
@@ -657,10 +665,10 @@
     </div>
   </section>
 
-  <!-- Shift info: date, shift times, km, fuel -->
+  <!-- Shift info -->
   <section class="card">
     <div class="card-label">Shift info</div>
-    <div class="section-title">Shift start / end and odometer</div>
+    <div class="section-title">Per date: shift time, km, fuel</div>
     <div class="field-grid">
       <div class="field">
         <label for="date">Active date</label>
@@ -688,34 +696,34 @@
       </div>
     </div>
     <div id="shiftKmStats" class="shift-summary">
-      Set shift start, and optionally end and km. This tracks distance, efficiency, and true shift length.
+      Use this block when parked. On duty bar above shows live status.
     </div>
   </section>
 
-  <!-- Duty timer and run controls -->
+  <!-- Run control -->
   <section class="card">
-    <div class="card-label">On duty timer</div>
-    <div class="section-title">Tap Start when your shift begins, tap End to log a block as a run</div>
-    <div class="timer-wrap">
-      <div class="timer-label" id="timerStatus">OFF DUTY</div>
-      <div class="timer-value" id="runningTimer">00:00:00</div>
-    </div>
-    <div id="runningLabel" class="running-label"></div>
+    <div class="card-label">Runs</div>
+    <div class="section-title">Start a run, then end with one tap</div>
     <div class="helper">
-      End gives options: log full block or a 10 / 20 / 30 minute run from the Start time.
-      First Start of the day sets the shift start time, so averages can use real on duty time.
+      Runs are chunks inside your shift. Start once, then end with End or a quick 10 / 20 / 30 minute patch.
     </div>
     <div class="btn-row">
-      <button class="btn-primary" id="startRunBtn">Start</button>
-      <button class="btn-secondary" id="endRunBtn">End</button>
-      <button class="btn-subtle" id="clearAllBtn">Clear all data</button>
+      <button class="btn-primary" id="startRunBtn">Start run</button>
     </div>
+    <div class="btn-row">
+      <button class="btn-end" id="endRunFullBtn">End</button>
+      <button class="btn-patch" data-mins="10">10</button>
+      <button class="btn-patch" data-mins="20">20</button>
+      <button class="btn-patch" data-mins="30">30</button>
+      <button class="btn-subtle" id="clearAllBtn">Clear all</button>
+    </div>
+    <div class="run-label" id="runStatus">No active run.</div>
   </section>
 
   <!-- Manual / edit run form -->
   <section class="card">
-    <div class="card-label">Manual or edit entry</div>
-    <div class="section-title">Use this to correct or manually log a run</div>
+    <div class="card-label">Manual or edit</div>
+    <div class="section-title">Fix a run or log one manually</div>
     <div class="field-grid">
       <div class="field">
         <label for="earnings">Run earnings ($)</label>
@@ -739,20 +747,20 @@
       </div>
     </div>
     <div class="helper">
-      Editing a run loads it here. Save with the End button.
+      Pick a run from the list to load it here. End button will save the edit when editing.
     </div>
   </section>
 
   <!-- Stats -->
   <section class="card">
-    <div class="card-label">Stats overview</div>
+    <div class="card-label">Stats</div>
     <div class="stats-grid">
       <div class="stat">
         <div class="stat-label">Earnings</div>
         <div class="stat-value" id="statTotal">
           Today $0.00 | Week $0.00 | All $0.00
         </div>
-        <div class="stat-note">Today is the active date. Week is the week containing that date.</div>
+        <div class="stat-note">Based on all logged runs for the selected date and range.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Avg $ / hour</div>
@@ -760,18 +768,18 @@
           Today $0.0 | Week $0.0 | All $0.0
         </div>
         <div class="stat-note">
-          Shows run based hourly. When shift times exist, also shows shift based hourly for today.
+          Uses run time. When shift is set, also compares against true shift hourly.
         </div>
       </div>
       <div class="stat">
         <div class="stat-label">Top app</div>
         <div class="stat-value" id="statTopApp">None</div>
-        <div class="stat-note">Based on hourly earnings, not request count.</div>
+        <div class="stat-note">Based on hourly rate across runs.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Hot hours</div>
         <div class="stat-value" id="statHotHours">Need more data</div>
-        <div class="stat-note">Best 2 hour window from your history.</div>
+        <div class="stat-note">Best 2 hour window across history.</div>
       </div>
     </div>
   </section>
@@ -784,7 +792,7 @@
       <button class="analytics-tab" data-view="apps">App share</button>
     </div>
     <div id="analyticsContent" class="analytics-content">
-      <div class="helper">Charts show up once you have logged some runs.</div>
+      <div class="helper">Scroll down here when parked. Charts light up once you have runs.</div>
     </div>
   </section>
 
@@ -793,46 +801,23 @@
     <div class="card-label">Recent runs</div>
     <div class="entries-card" id="entriesList">
       <div class="helper">
-        Includes a Today so far summary plus each run: date, app, times, duration (h/m), rate, type, notes, edit and remove.
+        Shows a Today summary plus each run. Duration is h/m, one run per event.
       </div>
     </div>
   </section>
 </div>
 
-<!-- Modal -->
-<div class="modal-backdrop" id="endModalBackdrop">
-  <div class="modal" id="endModal">
-    <div class="modal-title">How do you want to log this run</div>
-    <div class="modal-text" id="modalSummary"></div>
-    <div class="modal-options">
-      <button class="modal-btn" data-mode="full">
-        <span class="label">Use full run</span>
-        <span>Start to End as shown.</span>
-      </button>
-      <button class="modal-btn" data-mode="10">
-        <span class="label">10 min from Start</span>
-        <span>Quick patch block.</span>
-      </button>
-      <button class="modal-btn" data-mode="20">
-        <span class="label">20 min from Start</span>
-        <span>Short missed run.</span>
-      </button>
-      <button class="modal-btn" data-mode="30">
-        <span class="label">30 min from Start</span>
-        <span>Longer missed run.</span>
-      </button>
-    </div>
-    <div class="modal-actions">
-      <button class="modal-cancel" id="modalCancelBtn">Cancel</button>
-    </div>
-  </div>
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const STORAGE_KEY = "shiftintel_runs_v8";
-  const ACTIVE_RUN_KEY = "shiftintel_active_run_v8";
-  const SHIFT_KEY = "shiftintel_shifts_v2";
+  const RUNS_KEY = "duddy_runs_v1";
+  const ACTIVE_RUN_KEY = "duddy_active_run_v1";
+  const SHIFTS_KEY = "duddy_shifts_v1";
+
+  // Elements
+  const dutyBadge = document.getElementById("dutyBadge");
+  const dutyInfo = document.getElementById("dutyInfo");
+  const dutyHint = document.getElementById("dutyHint");
+  const dutyToggleBtn = document.getElementById("dutyToggleBtn");
 
   const dateEl = document.getElementById("date");
   const shiftStartTimeEl = document.getElementById("shiftStartTime");
@@ -842,38 +827,39 @@ document.addEventListener("DOMContentLoaded", () => {
   const shiftFuelEl = document.getElementById("shiftFuel");
   const shiftKmStatsEl = document.getElementById("shiftKmStats");
 
+  const appButtons = Array.from(document.querySelectorAll("#appButtons .app-btn"));
+
   const startEl = document.getElementById("start");
   const endEl = document.getElementById("end");
   const earningsEl = document.getElementById("earnings");
   const ordersEl = document.getElementById("orders");
   const notesEl = document.getElementById("notes");
+
+  const startRunBtn = document.getElementById("startRunBtn");
+  const endRunFullBtn = document.getElementById("endRunFullBtn");
+  const patchButtons = Array.from(document.querySelectorAll(".btn-patch"));
+  const clearAllBtn = document.getElementById("clearAllBtn");
+  const runStatusEl = document.getElementById("runStatus");
+
   const entriesList = document.getElementById("entriesList");
-  const runningLabel = document.getElementById("runningLabel");
-  const runningTimerEl = document.getElementById("runningTimer");
-  const timerStatusEl = document.getElementById("timerStatus");
 
   const statTotal = document.getElementById("statTotal");
   const statPerHour = document.getElementById("statPerHour");
   const statTopApp = document.getElementById("statTopApp");
   const statHotHours = document.getElementById("statHotHours");
 
-  const startRunBtn = document.getElementById("startRunBtn");
-  const endRunBtn = document.getElementById("endRunBtn");
-  const clearAllBtn = document.getElementById("clearAllBtn");
-
-  const appButtons = Array.from(document.querySelectorAll("#appButtons .app-btn"));
   const analyticsTabs = Array.from(document.querySelectorAll(".analytics-tab"));
   const analyticsContent = document.getElementById("analyticsContent");
 
-  const modalBackdrop = document.getElementById("endModalBackdrop");
-  const modalSummary = document.getElementById("modalSummary");
-  const modalCancelBtn = document.getElementById("modalCancelBtn");
-  const modalOptionButtons = () => Array.from(document.querySelectorAll(".modal-btn"));
-
+  // State
   let selectedApp = "Uber Eats";
   let activeRun = loadActiveRun();
   let editingIndex = null;
-  let timerInterval = null;
+
+  let shiftTimerInterval = null;
+  let runTimerInterval = null;
+
+  // Helpers
 
   function todayStr() {
     return new Date().toISOString().slice(0, 10);
@@ -928,26 +914,28 @@ document.addEventListener("DOMContentLoaded", () => {
     return date;
   }
 
-  function loadEntries() {
+  // Storage helpers
+
+  function loadRuns() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(RUNS_KEY);
       return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
     }
   }
 
-  function saveEntries(entries) {
+  function saveRuns(runs) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+      localStorage.setItem(RUNS_KEY, JSON.stringify(runs));
     } catch (e) {
-      console.error("Failed to save entries", e);
+      console.error("Failed to save runs", e);
     }
   }
 
   function loadShifts() {
     try {
-      const raw = localStorage.getItem(SHIFT_KEY);
+      const raw = localStorage.getItem(SHIFTS_KEY);
       return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
@@ -956,7 +944,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function saveShifts(shifts) {
     try {
-      localStorage.setItem(SHIFT_KEY, JSON.stringify(shifts));
+      localStorage.setItem(SHIFTS_KEY, JSON.stringify(shifts));
     } catch (e) {
       console.error("Failed to save shifts", e);
     }
@@ -974,6 +962,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const idx = shifts.findIndex(s => s.date === shift.date);
     if (idx >= 0) shifts[idx] = shift;
     else shifts.push(shift);
+    saveShifts(shifts);
+  }
+
+  function setOnDutyForDate(date) {
+    const shifts = loadShifts();
+    let found = shifts.find(s => s.date === date);
+    if (!found) {
+      found = { date, startTime: null, endTime: null, startKm: null, endKm: null, fuel: null, onDuty: false };
+      shifts.push(found);
+    }
+    shifts.forEach(s => {
+      s.onDuty = (s.date === date);
+    });
+    saveShifts(shifts);
+    return found;
+  }
+
+  function clearOnDuty() {
+    const shifts = loadShifts();
+    shifts.forEach(s => { s.onDuty = false; });
     saveShifts(shifts);
   }
 
@@ -998,11 +1006,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function setTodayIfEmpty() {
-    if (!dateEl.value) dateEl.value = todayStr();
-  }
+  // Shift UI
 
-  function syncShiftUI() {
+  function syncShiftInputs() {
     const activeDate = dateEl.value || todayStr();
     const shift = getShift(activeDate);
     shiftStartTimeEl.value = shift && shift.startTime ? shift.startTime : "";
@@ -1016,46 +1022,45 @@ document.addEventListener("DOMContentLoaded", () => {
     const activeDate = dateEl.value || todayStr();
     if (!activeDate) return;
 
-    const startKm = parseFloat(shiftStartKmEl.value);
-    const endKm = parseFloat(shiftEndKmEl.value);
-    const fuel = parseFloat(shiftFuelEl.value);
-    const startTime = shiftStartTimeEl.value || "";
-    const endTime = shiftEndTimeEl.value || "";
+    const startTime = shiftStartTimeEl.value || null;
+    const endTime = shiftEndTimeEl.value || null;
+    const startKm = shiftStartKmEl.value === "" ? null : parseFloat(shiftStartKmEl.value);
+    const endKm = shiftEndKmEl.value === "" ? null : parseFloat(shiftEndKmEl.value);
+    const fuel = shiftFuelEl.value === "" ? null : parseFloat(shiftFuelEl.value);
 
     const empty =
       !startTime &&
       !endTime &&
-      (isNaN(startKm) || shiftStartKmEl.value === "") &&
-      (isNaN(endKm) || shiftEndKmEl.value === "") &&
-      (isNaN(fuel) || shiftFuelEl.value === "");
+      startKm == null &&
+      endKm == null &&
+      fuel == null;
 
     if (empty) {
-      const filtered = loadShifts().filter(s => s.date !== activeDate);
-      saveShifts(filtered);
+      const cleaned = loadShifts().filter(s => s.date !== activeDate);
+      saveShifts(cleaned);
     } else {
-      const shift = {
-        date: activeDate,
-        startTime: startTime || null,
-        endTime: endTime || null,
-        startKm: isNaN(startKm) ? null : startKm,
-        endKm: isNaN(endKm) ? null : endKm,
-        fuel: isNaN(fuel) ? null : fuel
-      };
-      upsertShift(shift);
+      const existing = getShift(activeDate) || { date: activeDate, onDuty: false };
+      existing.startTime = startTime;
+      existing.endTime = endTime;
+      existing.startKm = startKm;
+      existing.endKm = endKm;
+      existing.fuel = fuel;
+      upsertShift(existing);
     }
 
     updateShiftStats();
-    render();
+    updateDutyBar();
+    render(); // stats and list use shift info too
   }
 
-  function calcShiftHoursForDate(dateStr) {
+  function calcShiftHours(dateStr) {
     const shift = getShift(dateStr);
     if (!shift || !shift.startTime) return 0;
 
     let endTimeStr;
     if (shift.endTime) {
       endTimeStr = shift.endTime;
-    } else if (dateStr === todayStr()) {
+    } else if (shift.onDuty && dateStr === todayStr()) {
       endTimeStr = formatTimeForInput(new Date());
     } else {
       return 0;
@@ -1065,13 +1070,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateShiftStats() {
-    const entries = loadEntries();
+    const runs = loadRuns();
     const activeDate = dateEl.value || todayStr();
     const shift = getShift(activeDate);
 
     if (!shift || shift.startKm == null || shift.endKm == null) {
       shiftKmStatsEl.textContent =
-        "Add shift km to see distance, dollars per km, and efficiency.";
+        "Add km once in a while to see $ per km and fuel efficiency.";
       return;
     }
 
@@ -1081,18 +1086,19 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const shiftEntries = entries.filter(e => e.date === activeDate);
-    let shiftEarn = 0;
-    let shiftHoursRuns = 0;
-
-    shiftEntries.forEach(e => {
-      const h = calcHours(e.start, e.end);
-      shiftEarn += e.earnings || 0;
-      shiftHoursRuns += h;
+    const dayRuns = runs.filter(r => r.date === activeDate);
+    let dayEarn = 0;
+    let dayRunHours = 0;
+    dayRuns.forEach(r => {
+      const h = calcHours(r.start, r.end);
+      if (h > 0) {
+        dayRunHours += h;
+        dayEarn += r.earnings || 0;
+      }
     });
 
-    const dollarsPerKm = km > 0 ? (shiftEarn / km).toFixed(2) : "0.00";
-    const kmPerHour = shiftHoursRuns > 0 ? (km / shiftHoursRuns).toFixed(1) : "0.0";
+    const dollarsPerKm = km > 0 ? (dayEarn / km).toFixed(2) : "0.00";
+    const kmPerHour = dayRunHours > 0 ? (km / dayRunHours).toFixed(1) : "0.0";
 
     let fuelText = "";
     if (shift.fuel != null && shift.fuel > 0) {
@@ -1100,85 +1106,157 @@ document.addEventListener("DOMContentLoaded", () => {
       fuelText = " | " + lPer100 + " L/100km";
     }
 
-    let shiftTimePart = "";
-    const shiftHours = calcShiftHoursForDate(activeDate);
-    if (shiftHours > 0) {
-      const startLabel = shift.startTime || "";
+    const shiftHours = calcShiftHours(activeDate);
+    let shiftText = "";
+    if (shiftHours > 0 && shift.startTime) {
       const endLabel = shift.endTime ? shift.endTime : "now";
-      shiftTimePart =
-        " | Shift " + startLabel + " - " + endLabel +
+      shiftText =
+        " | Shift " + shift.startTime + " - " + endLabel +
         " (" + formatDurationHM(shiftHours) + ")";
     }
 
     shiftKmStatsEl.textContent =
-      km.toFixed(1) + " km | $" + shiftEarn.toFixed(2) +
+      km.toFixed(1) + " km | $" + dayEarn.toFixed(2) +
       " (" + dollarsPerKm + " $/km) | " +
       kmPerHour + " km/hr (run time)" +
       fuelText +
-      shiftTimePart;
+      shiftText;
   }
 
-  function startTimer() {
-    if (!activeRun || !activeRun.startTs) return;
-    if (timerInterval) clearInterval(timerInterval);
+  // Duty bar
 
-    timerStatusEl.textContent = "ON DUTY";
-    const startTime = new Date(activeRun.startTs).getTime();
+  function startShiftTimer(shift) {
+    if (!shift || !shift.startTime) return;
+    if (shiftTimerInterval) clearInterval(shiftTimerInterval);
 
     function tick() {
+      const startParts = shift.startTime.split(":");
+      const sh = Number(startParts[0]);
+      const sm = Number(startParts[1]);
+      if (Number.isNaN(sh) || Number.isNaN(sm)) return;
+      const now = new Date();
+      const start = new Date(now);
+      start.setHours(sh, sm, 0, 0);
+      if (now < start) {
+        start.setDate(start.getDate() - 1);
+      }
+      const diffSec = Math.max(0, Math.floor((now - start) / 1000));
+      const h = Math.floor(diffSec / 3600).toString().padStart(2, "0");
+      const m = Math.floor((diffSec % 3600) / 60).toString().padStart(2, "0");
+      dutyInfo.textContent =
+        "On duty since " + shift.startTime + " ▪ " + h + ":" + m + " so far";
+    }
+
+    tick();
+    shiftTimerInterval = setInterval(tick, 30000);
+  }
+
+  function stopShiftTimer() {
+    if (shiftTimerInterval) clearInterval(shiftTimerInterval);
+    shiftTimerInterval = null;
+  }
+
+  function updateDutyBar() {
+    const shifts = loadShifts();
+    const onDutyShift = shifts.find(s => s.onDuty);
+
+    if (onDutyShift && onDutyShift.startTime) {
+      dutyBadge.textContent = "ON DUTY";
+      dutyBadge.classList.remove("off");
+      dutyInfo.textContent =
+        "On duty since " + onDutyShift.startTime;
+      dutyHint.textContent = "Duddy uses this for real shift hourly. Off duty when you are done.";
+      dutyToggleBtn.textContent = "Off duty";
+      dutyToggleBtn.classList.remove("off");
+      startShiftTimer(onDutyShift);
+    } else {
+      dutyBadge.textContent = "OFF DUTY";
+      dutyBadge.classList.add("off");
+      dutyInfo.textContent = "Not tracking a shift.";
+      dutyHint.textContent = "Tap Go on duty at first login of your day.";
+      dutyToggleBtn.textContent = "Go on duty";
+      dutyToggleBtn.classList.add("off");
+      stopShiftTimer();
+    }
+  }
+
+  dutyToggleBtn.addEventListener("click", () => {
+    const shifts = loadShifts();
+    const currentOn = shifts.find(s => s.onDuty);
+
+    if (currentOn) {
+      // Turning off
+      const now = new Date();
+      const suggested = formatTimeForInput(now);
+      const val = prompt("Shift end time for " + currentOn.date + " (HH:MM)", suggested);
+      if (val === null || val.trim() === "") {
+        return;
+      }
+      currentOn.endTime = val.trim();
+      currentOn.onDuty = false;
+      upsertShift(currentOn);
+      updateShiftStats();
+      updateDutyBar();
+      render();
+    } else {
+      // Turning on for today
+      const today = todayStr();
+      let shift = setOnDutyForDate(today);
+      if (!shift.startTime) {
+        shift.startTime = formatTimeForInput(new Date());
+      }
+      shift.endTime = null;
+      shift.onDuty = true;
+      upsertShift(shift);
+      dateEl.value = today;
+      syncShiftInputs();
+      updateShiftStats();
+      updateDutyBar();
+      render();
+    }
+  });
+
+  // Run timers
+
+  function startRunTimer() {
+    if (!activeRun || !activeRun.startTs) return;
+    if (runTimerInterval) clearInterval(runTimerInterval);
+
+    function tick() {
+      const startTime = new Date(activeRun.startTs).getTime();
       const now = Date.now();
       let diff = Math.max(0, Math.floor((now - startTime) / 1000));
       const h = Math.floor(diff / 3600).toString().padStart(2, "0");
       diff %= 3600;
       const m = Math.floor(diff / 60).toString().padStart(2, "0");
       const s = (diff % 60).toString().padStart(2, "0");
-      runningTimerEl.textContent = h + ":" + m + ":" + s;
+      runStatusEl.textContent =
+        "Active run for " + (activeRun.app || selectedApp) +
+        " ▪ " + h + ":" + m + ":" + s;
     }
 
     tick();
-    timerInterval = setInterval(tick, 1000);
+    runTimerInterval = setInterval(tick, 1000);
   }
 
-  function stopTimer() {
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = null;
-    timerStatusEl.textContent = "OFF DUTY";
-    runningTimerEl.textContent = "00:00:00";
-  }
-
-  function openEndModal(summaryText, onSelect) {
-    modalSummary.textContent = summaryText;
-    modalBackdrop.style.display = "flex";
-
-    const optionButtons = modalOptionButtons();
-    optionButtons.forEach(btn => {
-      const handler = () => {
-        const mode = btn.dataset.mode;
-        closeEndModal();
-        onSelect(mode);
-      };
-      btn.addEventListener("click", handler, { once: true });
-    });
-
-    const cancelHandler = () => {
-      closeEndModal();
-    };
-    modalCancelBtn.addEventListener("click", cancelHandler, { once: true });
-
-    function closeEndModal() {
-      modalBackdrop.style.display = "none";
+  function stopRunTimer() {
+    if (runTimerInterval) clearInterval(runTimerInterval);
+    runTimerInterval = null;
+    if (!activeRun && editingIndex === null) {
+      runStatusEl.textContent = "No active run.";
     }
   }
 
-  function renderAnalytics(entries) {
-    if (!analyticsContent) return;
+  // Analytics
+
+  function renderAnalytics(runs) {
     const activeTab = analyticsTabs.find(t => t.classList.contains("active"));
     analyticsContent.innerHTML = "";
 
-    if (!entries.length) {
+    if (!runs.length) {
       const d = document.createElement("div");
       d.className = "helper";
-      d.textContent = "Charts show once you have some runs.";
+      d.textContent = "Log some runs and Duddy will chart them here.";
       analyticsContent.appendChild(d);
       return;
     }
@@ -1193,14 +1271,13 @@ document.addEventListener("DOMContentLoaded", () => {
       weekEnd.setDate(weekEnd.getDate() + 7);
 
       const daily = [0, 0, 0, 0, 0, 0, 0];
-
-      entries.forEach(e => {
-        if (!e.date) return;
-        const d = parseDateOnly(e.date);
+      runs.forEach(r => {
+        if (!r.date) return;
+        const d = parseDateOnly(r.date);
         if (!d || d < weekStart || d >= weekEnd) return;
-        const h = calcHours(e.start, e.end);
+        const h = calcHours(r.start, r.end);
         if (h <= 0) return;
-        const earn = e.earnings || 0;
+        const earn = r.earnings || 0;
         const idx = (d.getDay() + 6) % 7;
         daily[idx] += earn;
       });
@@ -1237,25 +1314,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "Shows which days are worth logging in.";
+      note.textContent = "Glance to see which days are actually worth logging in.";
       analyticsContent.appendChild(note);
     }
 
     if (view === "apps") {
       const byApp = {};
-      entries.forEach(e => {
-        const h = calcHours(e.start, e.end);
+      runs.forEach(r => {
+        const h = calcHours(r.start, r.end);
         if (h <= 0) return;
-        const earn = e.earnings || 0;
-        if (!byApp[e.app]) byApp[e.app] = 0;
-        byApp[e.app] += earn;
+        const earn = r.earnings || 0;
+        if (!byApp[r.app]) byApp[r.app] = 0;
+        byApp[r.app] += earn;
       });
 
       const apps = Object.keys(byApp).filter(a => byApp[a] > 0);
       if (!apps.length) {
         const d = document.createElement("div");
         d.className = "helper";
-        d.textContent = "No earnings yet to split by app.";
+        d.textContent = "Once you have earnings, Duddy will split by app.";
         analyticsContent.appendChild(d);
         return;
       }
@@ -1306,44 +1383,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "If one app is tiny, stop babysitting it.";
+      note.textContent = "If one app is leeching, this will expose it.";
       analyticsContent.appendChild(note);
     }
   }
 
+  // Main render
+
   function render() {
-    const entries = loadEntries();
+    const runs = loadRuns();
     const activeDateStr = dateEl.value || todayStr();
     const activeDate = parseDateOnly(activeDateStr) || new Date();
     const weekStart = getWeekStart(activeDate);
     const weekEnd = new Date(weekStart.getTime());
     weekEnd.setDate(weekEnd.getDate() + 7);
 
-    const shiftHoursForActive = calcShiftHoursForDate(activeDateStr);
+    const shiftHoursForActive = calcShiftHours(activeDateStr);
 
-    // Recent runs and Today so far
+    // Recent runs and today summary
     entriesList.innerHTML = "";
 
-    if (!entries.length) {
+    if (!runs.length) {
       const div = document.createElement("div");
       div.className = "helper";
-      div.textContent =
-        "Log runs to see history. Everything here is editable.";
+      div.textContent = "No runs yet. Start one and end with a single tap.";
       entriesList.appendChild(div);
     } else {
-      const todaysEntries = entries.filter(e => e.date === activeDateStr);
-      if (todaysEntries.length) {
+      const todays = runs.filter(r => r.date === activeDateStr);
+      if (todays.length) {
         let cumEarn = 0;
         let cumHours = 0;
-
-        todaysEntries.forEach(e => {
-          const h = calcHours(e.start, e.end);
+        todays.forEach(r => {
+          const h = calcHours(r.start, r.end);
           if (h > 0) {
             cumHours += h;
-            cumEarn += e.earnings || 0;
+            cumEarn += r.earnings || 0;
           }
         });
-
         const runAvg = cumHours > 0 ? cumEarn / cumHours : 0;
 
         let labelRate;
@@ -1365,45 +1441,47 @@ document.addEventListener("DOMContentLoaded", () => {
         summaryRow.className = "entry-row summary";
         summaryRow.innerHTML = `
           <span class="main">Today so far</span>
-          <span class="app">${todaysEntries.length} runs</span>
+          <span class="app">${todays.length} runs</span>
           <span class="time">${formatDurationHM(cumHours) || "-"}</span>
           <span class="dur">${labelRate}</span>
         `;
         entriesList.appendChild(summaryRow);
       }
 
-      entries.slice().reverse().forEach((e, idx) => {
+      runs.slice().reverse().forEach((r, idx) => {
         const row = document.createElement("div");
         row.className = "entry-row";
 
-        const d = parseDateOnly(e.date);
+        const d = parseDateOnly(r.date);
         const dateLabel = d
           ? d.toLocaleDateString(undefined, { month: "short", day: "numeric" })
-          : (e.date || "");
+          : (r.date || "");
 
-        const h = calcHours(e.start, e.end);
-        const rate = h > 0 && e.earnings ? e.earnings / h : 0;
+        const h = calcHours(r.start, r.end);
+        const rate = h > 0 && r.earnings ? r.earnings / h : 0;
         const typeLabel =
-          e.quick
+          r.quick
             ? "Quick patch"
-            : e.auto === true
+            : r.auto === true
             ? "Auto"
-            : e.auto === false
+            : r.auto === false
             ? "Manual"
             : "Legacy";
         const durLabel = formatDurationHM(h);
 
         row.innerHTML = `
           <span class="main">${dateLabel}</span>
-          <span class="app">${e.app}</span>
-          <span class="time">${e.start || "?"} - ${e.end || "?"}</span>
-          <span class="dur">${durLabel}</span>
+          <span class="app">${r.app}</span>
+          <span class="time">${r.start || "?"} - ${r.end || "?"}</span>
+          <span class="dur">${durLabel || "-"}</span>
         `;
 
         const rateSpan = document.createElement("span");
         rateSpan.className = "rate";
         rateSpan.textContent =
-          h > 0 && e.earnings ? "$" + rate.toFixed(1) + "/hr" : "-";
+          h > 0 && r.earnings
+            ? "$" + rate.toFixed(1) + "/hr"
+            : "-";
         row.appendChild(rateSpan);
 
         const meta = document.createElement("span");
@@ -1411,10 +1489,10 @@ document.addEventListener("DOMContentLoaded", () => {
         meta.textContent = typeLabel;
         row.appendChild(meta);
 
-        if (e.notes) {
+        if (r.notes) {
           const note = document.createElement("span");
           note.className = "note";
-          note.textContent = e.notes;
+          note.textContent = r.notes;
           row.appendChild(note);
         }
 
@@ -1422,12 +1500,12 @@ document.addEventListener("DOMContentLoaded", () => {
         edit.className = "edit";
         edit.textContent = "Edit";
         edit.onclick = () => {
-          const realIndex = entries.length - 1 - idx;
-          const picked = entries[realIndex];
+          const realIndex = runs.length - 1 - idx;
+          const picked = runs[realIndex];
           editingIndex = realIndex;
 
           dateEl.value = picked.date;
-          syncShiftUI();
+          syncShiftInputs();
 
           appButtons.forEach(b => {
             if (b.dataset.app === picked.app) {
@@ -1446,11 +1524,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           activeRun = null;
           saveActiveRun(null);
-          stopTimer();
-
-          runningLabel.textContent =
+          stopRunTimer();
+          runStatusEl.textContent =
             "Editing run. Adjust fields, then press End to save.";
-          endRunBtn.textContent = "Save changes";
         };
         row.appendChild(edit);
 
@@ -1458,13 +1534,12 @@ document.addEventListener("DOMContentLoaded", () => {
         del.className = "delete";
         del.textContent = "Remove";
         del.onclick = () => {
-          const realIndex = entries.length - 1 - idx;
-          entries.splice(realIndex, 1);
-          saveEntries(entries);
+          const realIndex = runs.length - 1 - idx;
+          runs.splice(realIndex, 1);
+          saveRuns(runs);
           if (editingIndex === realIndex) {
             editingIndex = null;
-            endRunBtn.textContent = "End";
-            runningLabel.textContent = "";
+            runStatusEl.textContent = "No active run.";
           }
           render();
         };
@@ -1485,33 +1560,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const byApp = {};
     const hourBuckets = {};
 
-    entries.forEach(e => {
-      if (!e.date) return;
-      const d = parseDateOnly(e.date);
+    runs.forEach(r => {
+      if (!r.date) return;
+      const d = parseDateOnly(r.date);
       if (!d) return;
-
-      const h = calcHours(e.start, e.end);
+      const h = calcHours(r.start, r.end);
       if (h <= 0) return;
-      const earn = e.earnings || 0;
+      const earn = r.earnings || 0;
 
       total += earn;
       totalHours += h;
 
-      if (!byApp[e.app]) byApp[e.app] = { earnings: 0, hours: 0 };
-      byApp[e.app].earnings += earn;
-      byApp[e.app].hours += h;
+      if (!byApp[r.app]) byApp[r.app] = { earnings: 0, hours: 0 };
+      byApp[r.app].earnings += earn;
+      byApp[r.app].hours += h;
 
-      if (e.start) {
-        const parts = e.start.split(":");
-        const sh = parseInt(parts[0], 10);
-        if (!Number.isNaN(sh)) {
-          if (!hourBuckets[sh]) hourBuckets[sh] = { earnings: 0, hours: 0 };
-          hourBuckets[sh].earnings += earn;
-          hourBuckets[sh].hours += h;
+      if (r.start) {
+        const hh = parseInt(r.start.split(":")[0], 10);
+        if (!Number.isNaN(hh)) {
+          if (!hourBuckets[hh]) hourBuckets[hh] = { earnings: 0, hours: 0 };
+          hourBuckets[hh].earnings += earn;
+          hourBuckets[hh].hours += h;
         }
       }
 
-      if (e.date === activeDateStr) {
+      if (r.date === activeDateStr) {
         todayEarn += earn;
         todayHours += h;
       }
@@ -1552,9 +1625,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let topRate = 0;
     Object.keys(byApp).forEach(app => {
       const { earnings, hours } = byApp[app];
-      if (hours > 0) {
+      if (hours > 0 && earnings > 0) {
         const r = earnings / hours;
-        if (r > topRate && earnings > 0) {
+        if (r > topRate) {
           topRate = r;
           topApp = app;
         }
@@ -1571,9 +1644,9 @@ document.addEventListener("DOMContentLoaded", () => {
     Object.keys(hourBuckets).forEach(hStr => {
       const h = parseInt(hStr, 10);
       const { earnings, hours } = hourBuckets[h];
-      if (hours > 0) {
+      if (hours > 0 && earnings > 0) {
         const r = earnings / hours;
-        if (r > bestBucketRate && earnings > 0) {
+        if (r > bestBucketRate) {
           bestBucketRate = r;
           bestBucket = h;
         }
@@ -1595,20 +1668,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateShiftStats();
-    renderAnalytics(entries);
+    renderAnalytics(runs);
 
-    // Timer display
+    // Run timer state
     if (activeRun && activeRun.startTs) {
-      startTimer();
-      const started = new Date(activeRun.startTs);
-      const app = activeRun.app || selectedApp;
-      runningLabel.textContent =
-        "Running " + app + " since " +
-        started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      startRunTimer();
     } else if (editingIndex === null) {
-      stopTimer();
-      runningLabel.textContent = "";
-      endRunBtn.textContent = "End";
+      stopRunTimer();
     }
   }
 
@@ -1618,16 +1684,14 @@ document.addEventListener("DOMContentLoaded", () => {
       appButtons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       selectedApp = btn.dataset.app;
-      if (activeRun && activeRun.startTs && editingIndex === null) {
-        const started = new Date(activeRun.startTs);
-        runningLabel.textContent =
-          "Running " + selectedApp + " since " +
-          started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      if (activeRun && activeRun.startTs) {
+        runStatusEl.textContent =
+          "Active run for " + selectedApp + ".";
       }
     });
   });
 
-  // Analytics tab switching
+  // Analytics tabs
   analyticsTabs.forEach(tab => {
     tab.addEventListener("click", () => {
       analyticsTabs.forEach(t => t.classList.remove("active"));
@@ -1638,15 +1702,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Date change
   dateEl.addEventListener("change", () => {
-    syncShiftUI();
+    syncShiftInputs();
+    updateShiftStats();
     render();
   });
 
   // Shift inputs
-  [shiftStartTimeEl, shiftEndTimeEl, shiftStartKmEl, shiftEndKmEl, shiftFuelEl].forEach(el => {
-    el.addEventListener("change", updateShiftFromInputs);
-    el.addEventListener("blur", updateShiftFromInputs);
-  });
+  [shiftStartTimeEl, shiftEndTimeEl, shiftStartKmEl, shiftEndKmEl, shiftFuelEl]
+    .forEach(el => {
+      el.addEventListener("change", updateShiftFromInputs);
+      el.addEventListener("blur", updateShiftFromInputs);
+    });
 
   // Start run
   startRunBtn.addEventListener("click", () => {
@@ -1655,12 +1721,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     if (activeRun && activeRun.startTs) {
-      alert("A run is already active. Hit End first.");
+      alert("A run is already active. Use End or a quick button.");
       return;
     }
 
     const now = new Date();
-    const dateStr = todayStr();
+    const dateStr = dateEl.value || todayStr();
 
     activeRun = {
       app: selectedApp,
@@ -1669,219 +1735,163 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     saveActiveRun(activeRun);
 
-    // Auto set shift start time for this date if not already set
-    const existingShift = getShift(dateStr) || { date: dateStr };
-    if (!existingShift.startTime) {
-      existingShift.startTime = formatTimeForInput(now);
-      upsertShift(existingShift);
-      shiftStartTimeEl.value = existingShift.startTime;
-    }
-
-    dateEl.value = dateStr;
-    runningLabel.textContent =
-      "Running " + selectedApp + " since " +
-      now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-    startTimer();
-    updateShiftStats();
-    render();
+    runStatusEl.textContent =
+      "Active run for " + selectedApp +
+      " since " + formatTimeForInput(now);
+    startRunTimer();
   });
 
-  // End run or save edit
-  endRunBtn.addEventListener("click", () => {
-    const entries = loadEntries();
+  // Finish run helper
+  function finalizeRun(modeMins) {
+    if (!activeRun || !activeRun.startTs) {
+      if (editingIndex !== null) {
+        // Save edit using manual inputs
+        const runs = loadRuns();
+        const idx = editingIndex;
+        const base = runs[idx];
 
-    // Editing existing run
-    if (editingIndex !== null) {
-      const idx = editingIndex;
-      const base = entries[idx];
+        const date = dateEl.value || base.date || todayStr();
+        const app = selectedApp || base.app;
+        const start = startEl.value || base.start;
+        const end = endEl.value || base.end;
+        const earningsVal = earningsEl.value || base.earnings || "0";
+        const ordersVal = ordersEl.value || base.orders || "0";
+        const notes = (notesEl.value || base.notes || "").trim();
 
-      const date = dateEl.value || base.date || todayStr();
-      const app = selectedApp || base.app;
-      const start = startEl.value || base.start;
-      const end = endEl.value || base.end;
-      const earnings = parseFloat(earningsEl.value || base.earnings || "0");
-      const orders = parseInt(ordersEl.value || base.orders || "0", 10);
-      const notes = (notesEl.value || base.notes || "").trim();
-
-      if (!start || !end) {
-        alert("Set start and end.");
-        return;
-      }
-      if (!earnings || earnings <= 0) {
-        alert("Set earnings for this run.");
-        return;
-      }
-
-      const hours = calcHours(start, end);
-      if (hours <= 0) {
-        alert("Time range is invalid. Fix it.");
-        return;
-      }
-
-      entries[idx] = {
-        ...base,
-        date,
-        app,
-        start,
-        end,
-        earnings,
-        orders,
-        notes,
-        auto: false,
-        quick: false
-      };
-      saveEntries(entries);
-
-      editingIndex = null;
-      endRunBtn.textContent = "End";
-      runningLabel.textContent = "";
-      startEl.value = "";
-      endEl.value = "";
-      earningsEl.value = "";
-      ordersEl.value = "";
-      notesEl.value = "";
-
-      render();
-      return;
-    }
-
-    // Active run assembled through modal
-    if (activeRun && activeRun.startTs) {
-      const startDate = new Date(activeRun.startTs);
-      const now = new Date();
-      const fullStart = formatTimeForInput(startDate);
-      const fullEnd = formatTimeForInput(now);
-      const fullHours = calcHours(fullStart, fullEnd).toFixed(2);
-
-      const text =
-        "Start: " + fullStart +
-        "  End: " + fullEnd +
-        "  Full duration: " + fullHours + "h. Choose how to log this.";
-
-      openEndModal(text, mode => {
-        const entries = loadEntries();
-        const date = activeRun.date || todayStr();
-        const app = activeRun.app || selectedApp;
-
-        let start = fullStart;
-        let end = fullEnd;
-        let quick = false;
-        let auto = false;
-
-        if (mode === "full") {
-          auto = true;
-        } else {
-          quick = true;
-          const mins = parseInt(mode, 10);
-          const patchedEnd = new Date(startDate.getTime() + mins * 60000);
-          end = formatTimeForInput(patchedEnd);
-        }
-
-        const earningsInput = prompt(
-          "Earnings for this run (leave blank if zero or unknown):",
-          ""
-        );
-        if (earningsInput === null) {
+        if (!start || !end) {
+          alert("Set start and end.");
           return;
         }
-        const earnings = parseFloat(earningsInput || "0") || 0;
-
-        const ordersInput = prompt(
-          "Orders in this run (optional):",
-          ""
-        );
-        const orders = ordersInput ? parseInt(ordersInput, 10) || 0 : 0;
+        const earnings = parseFloat(earningsVal);
+        if (Number.isNaN(earnings) || earnings < 0) {
+          alert("Set a valid earnings value.");
+          return;
+        }
 
         const hours = calcHours(start, end);
         if (hours <= 0) {
-          alert("Time range came out invalid. Adjust manually in the editor.");
+          alert("Time range is invalid.");
+          return;
         }
 
-        entries.push({
+        const orders = parseInt(ordersVal, 10) || 0;
+
+        runs[idx] = {
+          ...base,
           date,
           app,
           start,
           end,
           earnings,
           orders,
-          notes: quick
-            ? "Quick " + mode + " min patch from auto dialog"
-            : "Auto run from Start to End",
-          auto,
-          quick
-        });
-        saveEntries(entries);
+          notes,
+          auto: false,
+          quick: false
+        };
+        saveRuns(runs);
 
-        activeRun = null;
-        saveActiveRun(null);
-        stopTimer();
-        runningLabel.textContent = "";
+        editingIndex = null;
+        startEl.value = "";
+        endEl.value = "";
+        earningsEl.value = "";
+        ordersEl.value = "";
+        notesEl.value = "";
+        runStatusEl.textContent = "No active run.";
 
         render();
-      });
+        return;
+      }
 
+      alert("No active run. Start run first, or edit using the manual form.");
       return;
     }
 
-    // Manual new run
-    const date = dateEl.value || todayStr();
-    const app = selectedApp;
-    const start = startEl.value;
-    const end = endEl.value;
-    const earnings = parseFloat(earningsEl.value || "0");
-    const orders = parseInt(ordersEl.value || "0", 10);
-    const notes = notesEl.value.trim();
+    const runs = loadRuns();
+    const startDate = new Date(activeRun.startTs);
+    const date = activeRun.date || todayStr();
+    const app = activeRun.app || selectedApp;
 
-    if (!start || !end) {
-      alert("No active run. Use Start/End, or fill start and end manually.");
-      return;
-    }
-    if (!earnings || earnings <= 0) {
-      alert("Enter earnings for this run.");
-      return;
+    const startStr = formatTimeForInput(startDate);
+    let endStr;
+    let quick = false;
+
+    if (modeMins && modeMins > 0) {
+      quick = true;
+      const patched = new Date(startDate.getTime() + modeMins * 60000);
+      endStr = formatTimeForInput(patched);
+    } else {
+      endStr = formatTimeForInput(new Date());
     }
 
-    const hours = calcHours(start, end);
+    const hours = calcHours(startStr, endStr);
     if (hours <= 0) {
-      alert("Time math off. Fix start or end.");
+      alert("Run time came out invalid. Nothing saved.");
       return;
     }
 
-    entries.push({
+    let earnings = 0;
+    const input = prompt(
+      "Earnings for this run (optional, numbers only). Leave blank for zero.",
+      ""
+    );
+    if (input !== null && input.trim() !== "") {
+      const val = parseFloat(input.trim());
+      if (!Number.isNaN(val) && val >= 0) {
+        earnings = val;
+      }
+    }
+
+    const entry = {
       date,
       app,
-      start,
-      end,
+      start: startStr,
+      end: endStr,
       earnings,
-      orders,
-      notes,
-      auto: false,
-      quick: false
-    });
-    saveEntries(entries);
+      orders: 0,
+      notes: quick
+        ? "Quick " + modeMins + " min patch"
+        : "Full run",
+      auto: true,
+      quick
+    };
 
-    startEl.value = "";
-    endEl.value = "";
-    earningsEl.value = "";
-    ordersEl.value = "";
-    notesEl.value = "";
+    runs.push(entry);
+    saveRuns(runs);
+
+    activeRun = null;
+    saveActiveRun(null);
+    stopRunTimer();
+    runStatusEl.textContent = "Run saved.";
 
     render();
+  }
+
+  // End full run
+  endRunFullBtn.addEventListener("click", () => {
+    finalizeRun(null);
+  });
+
+  // Patch buttons
+  patchButtons.forEach(btn => {
+    const mins = parseInt(btn.dataset.mins, 10);
+    btn.addEventListener("click", () => {
+      finalizeRun(mins);
+    });
   });
 
   // Clear all
   clearAllBtn.addEventListener("click", () => {
-    const ok = confirm("Wipe all runs and shift data from this device");
+    const ok = confirm("Clear all Duddy data on this device");
     if (!ok) return;
 
-    saveEntries([]);
+    saveRuns([]);
     saveShifts([]);
     activeRun = null;
     saveActiveRun(null);
     editingIndex = null;
+    stopRunTimer();
+    stopShiftTimer();
 
-    stopTimer();
     dateEl.value = todayStr();
     shiftStartTimeEl.value = "";
     shiftEndTimeEl.value = "";
@@ -1893,15 +1903,16 @@ document.addEventListener("DOMContentLoaded", () => {
     earningsEl.value = "";
     ordersEl.value = "";
     notesEl.value = "";
-    runningLabel.textContent = "";
-    endRunBtn.textContent = "End";
+    runStatusEl.textContent = "No active run.";
 
+    updateDutyBar();
     render();
   });
 
   // Init
-  setTodayIfEmpty();
-  syncShiftUI();
+  if (!dateEl.value) dateEl.value = todayStr();
+  syncShiftInputs();
+  updateDutyBar();
   render();
 });
 </script>
