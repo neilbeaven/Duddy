@@ -389,6 +389,1719 @@
       margin-top: 2px;
     }
 
+    .shift-summary {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .analytics-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .analytics-tab {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .analytics-tab.active {
+      background: rgba(8, 15, 30, 0.98);
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 6px 14px rgba(15,23,42,0.9);
+    }
+
+    .analytics-content {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .week-bars {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 70px;
+      margin-top: 2px;
+    }
+
+    .week-bar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .week-bar-fill {
+      width: 100%;
+      border-radius: 8px 8px 2px 2px;
+      background: rgba(56,189,248,0.18);
+      transition: height var(--transition-fast);
+    }
+
+    .week-bar-label {
+      font-size: 0.6rem;
+      color: var(--muted);
+    }
+
+    .app-share-bar {
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      margin-top: 2px;
+      background: rgba(15,23,42,1);
+      border: 1px solid rgba(75,85,99,0.9);
+    }
+
+    .app-share-seg {
+      height: 100%;
+      font-size: 0;
+    }
+
+    .app-share-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      font-size: 0.63rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 4px;
+      background: rgba(148,163,253,0.9);
+    }
+
+    /* On Duty timer */
+    .timer-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .timer-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .timer-value {
+      font-size: 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 420px;
+      background: #020817;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 18px 60px rgba(15,23,42,0.9);
+      border: 1px solid rgba(56,189,248,0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .modal-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .modal-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .modal-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .modal-btn {
+      padding: 8px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(6,12,24,1);
+      color: var(--muted);
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: all var(--transition-fast);
+      align-items: flex-start;
+    }
+
+    .modal-btn span.label {
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.8rem;
+    }
+
+    .modal-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 8px 22px rgba(15,23,42,0.9);
+      transform: translateY(-1px);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .modal-cancel {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: transparent;
+      color: var(--muted);
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    .modal-cancel:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    @media (max-width: 400px) {
+      .title {
+        font-size: 1.7rem;
+      }
+      .timer-value {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="title">ShiftIntel</div>
+    <div class="subtitle">Start once, big timer. On End, choose full run or 10 / 20 / 30 minute patch.</div>
+    <div class="pill-row">
+      <div class="pill">Shift / Week / All time</div>
+      <div class="pill">Multi app</div>
+      <div class="pill">Auto run builder</div>
+      <div class="pill">Km & fuel aware</div>
+    </div>
+  </header>
+
+  <!-- Step 1: App selection -->
+  <section class="card">
+    <div class="card-label">Step 1</div>
+    <div class="section-title">Active platform</div>
+    <div class="app-buttons" id="appButtons">
+      <button class="app-btn active" data-app="Uber Eats"><span>Uber Eats</span></button>
+      <button class="app-btn" data-app="DoorDash"><span>DoorDash</span></button>
+      <button class="app-btn" data-app="SkipTheDishes"><span>Skip</span></button>
+      <button class="app-btn" data-app="Instacart"><span>Instacart</span></button>
+      <button class="app-btn" data-app="Uber Rides"><span>Uber Rides</span></button>
+      <button class="app-btn" data-app="Other"><span>Other</span></button>
+    </div>
+  </section>
+
+  <!-- Shift info: km and fuel -->
+  <section class="card">
+    <div class="card-label">Shift info</div>
+    <div class="section-title">Date, odometer, fuel</div>
+    <div class="field-grid">
+      <div class="field">
+        <label for="date">Active date</label>
+        <input type="date" id="date" />
+      </div>
+      <div class="field">
+        <label for="shiftStartKm">Start odometer (km)</label>
+        <input type="number" id="shiftStartKm" inputmode="decimal" placeholder="e.g. 12345" />
+      </div>
+      <div class="field">
+        <label for="shiftEndKm">End / current odometer (km)</label>
+        <input type="number" id="shiftEndKm" inputmode="decimal" placeholder="Update anytime" />
+      </div>
+      <div class="field">
+        <label for="shiftFuel">Fuel used this date (L)</label>
+        <input type="number" id="shiftFuel" inputmode="decimal" placeholder="Optional" />
+      </div>
+    </div>
+    <div id="shiftKmStats" class="shift-summary">
+      Add start and end km for this date to see distance, cost per km, and efficiency.
+    </div>
+  </section>
+
+  <!-- Duty timer and run controls -->
+  <section class="card">
+    <div class="card-label">On duty timer</div>
+    <div class="section-title">Tap Start to go on duty, tap End to define the run</div>
+    <div class="timer-wrap">
+      <div class="timer-label" id="timerStatus">OFF DUTY</div>
+      <div class="timer-value" id="runningTimer">00:00:00</div>
+    </div>
+    <div id="runningLabel" class="running-label"></div>
+    <div class="helper">
+      End will pop choices: use full Start to End, or build a 10 / 20 / 30 minute run from the Start timestamp.
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="startRunBtn">Start</button>
+      <button class="btn-secondary" id="endRunBtn">End</button>
+      <button class="btn-subtle" id="clearAllBtn">Clear all data</button>
+    </div>
+  </section>
+
+  <!-- Manual / edit run form -->
+  <section class="card">
+    <div class="card-label">Manual or edit entry</div>
+    <div class="section-title">Use if you need to correct or fully custom log a run</div>
+    <div class="field-grid">
+      <div class="field">
+        <label for="earnings">Run earnings ($)</label>
+        <input type="number" id="earnings" inputmode="decimal" placeholder="Total this run" />
+      </div>
+      <div class="field">
+        <label for="orders">Orders in this run</label>
+        <input type="number" id="orders" inputmode="numeric" placeholder="Trips" />
+      </div>
+      <div class="field">
+        <label for="start">Start time</label>
+        <input type="time" id="start" />
+      </div>
+      <div class="field">
+        <label for="end">End time</label>
+        <input type="time" id="end" />
+      </div>
+      <div class="field-full">
+        <label for="notes">Note (optional)</label>
+        <input type="text" id="notes" placeholder="Zone, promos, delays, stacked orders, etc." />
+      </div>
+    </div>
+    <div class="helper">
+      When editing a run, fields will load here. Saving uses this form instead of the auto dialog.
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="card">
+    <div class="card-label">Stats overview</div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Earnings</div>
+        <div class="stat-value" id="statTotal">
+          Today $0.00 | Week $0.00 | All $0.00
+        </div>
+        <div class="stat-note">Today is active date. Week is the week containing that date.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Avg $ / hour</div>
+        <div class="stat-value" id="statPerHour">
+          Today $0.0 | Week $0.0 | All $0.0
+        </div>
+        <div class="stat-note">This is the number that decides if you stay online.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Top app</div>
+        <div class="stat-value" id="statTopApp">None</div>
+        <div class="stat-note">Based on hourly, not order count.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Hot hours</div>
+        <div class="stat-value" id="statHotHours">Need more data</div>
+        <div class="stat-note">Best 2 hour window from all runs.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Analytics -->
+  <section class="card">
+    <div class="card-label">Analytics</div>
+    <div class="analytics-tabs">
+      <button class="analytics-tab active" data-view="weekly">Weekly bars</button>
+      <button class="analytics-tab" data-view="apps">App share</button>
+    </div>
+    <div id="analyticsContent" class="analytics-content">
+      <div class="helper">Charts activate when you have runs logged.</div>
+    </div>
+  </section>
+
+  <!-- Recent runs -->
+  <section class="card">
+    <div class="card-label">Recent runs</div>
+    <div class="entries-card" id="entriesList">
+      <div class="helper">
+        Date, app, start, end, duration, hourly, log type, notes, edit / remove.
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="endModalBackdrop">
+  <div class="modal" id="endModal">
+    <div class="modal-title">How do you want to log this run</div>
+    <div class="modal-text" id="modalSummary">
+      <!-- filled by script -->
+    </div>
+    <div class="modal-options">
+      <button class="modal-btn" data-mode="full">
+        <span class="label">Use full run</span>
+        <span>Start to End as shown.</span>
+      </button>
+      <button class="modal-btn" data-mode="10">
+        <span class="label">10 min from Start</span>
+        <span>Quick patch block.</span>
+      </button>
+      <button class="modal-btn" data-mode="20">
+        <span class="label">20 min from Start</span>
+        <span>For short gaps.</span>
+      </button>
+      <button class="modal-btn" data-mode="30">
+        <span class="label">30 min from Start</span>
+        <span>For longer forgotten runs.</span>
+      </button>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" id="modalCancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const STORAGE_KEY = "shiftintel_runs_v7";
+  const ACTIVE_RUN_KEY = "shiftintel_active_run_v7";
+  const SHIFT_KEY = "shiftintel_shifts_v1";
+
+  const dateEl = document.getElementById("date");
+  const shiftStartKmEl = document.getElementById("shiftStartKm");
+  const shiftEndKmEl = document.getElementById("shiftEndKm");
+  const shiftFuelEl = document.getElementById("shiftFuel");
+  const shiftKmStatsEl = document.getElementById("shiftKmStats");
+
+  const startEl = document.getElementById("start");
+  const endEl = document.getElementById("end");
+  const earningsEl = document.getElementById("earnings");
+  const ordersEl = document.getElementById("orders");
+  const notesEl = document.getElementById("notes");
+  const entriesList = document.getElementById("entriesList");
+  const runningLabel = document.getElementById("runningLabel");
+  const runningTimerEl = document.getElementById("runningTimer");
+  const timerStatusEl = document.getElementById("timerStatus");
+
+  const statTotal = document.getElementById("statTotal");
+  const statPerHour = document.getElementById("statPerHour");
+  const statTopApp = document.getElementById("statTopApp");
+  const statHotHours = document.getElementById("statHotHours");
+
+  const startRunBtn = document.getElementById("startRunBtn");
+  const endRunBtn = document.getElementById("endRunBtn");
+  const clearAllBtn = document.getElementById("clearAllBtn");
+
+  const appButtonsContainer = document.getElementById("appButtons");
+  const appButtons = appButtonsContainer
+    ? Array.from(appButtonsContainer.querySelectorAll(".app-btn"))
+    : [];
+
+  const analyticsTabs = Array.from(document.querySelectorAll(".analytics-tab"));
+  const analyticsContent = document.getElementById("analyticsContent");
+
+  const modalBackdrop = document.getElementById("endModalBackdrop");
+  const modalSummary = document.getElementById("modalSummary");
+  const modalCancelBtn = document.getElementById("modalCancelBtn");
+  const modalOptionButtons = () =>
+    Array.from(document.querySelectorAll(".modal-btn"));
+
+  let selectedApp = "Uber Eats";
+  let activeRun = loadActiveRun();
+  let editingIndex = null;
+  let timerInterval = null;
+
+  function todayStr() {
+    return new Date().toISOString().slice(0, 10);
+  }
+
+  function setTodayIfEmpty() {
+    if (!dateEl.value) dateEl.value = todayStr();
+  }
+
+  function loadEntries() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveEntries(entries) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (e) {
+      console.error("Failed to save entries", e);
+    }
+  }
+
+  function loadShifts() {
+    try {
+      const raw = localStorage.getItem(SHIFT_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveShifts(shifts) {
+    try {
+      localStorage.setItem(SHIFT_KEY, JSON.stringify(shifts));
+    } catch (e) {
+      console.error("Failed to save shifts", e);
+    }
+  }
+
+  function getShift(date) {
+    if (!date) return null;
+    const shifts = loadShifts();
+    return shifts.find(s => s.date === date) || null;
+  }
+
+  function upsertShift(shift) {
+    if (!shift || !shift.date) return;
+    const shifts = loadShifts();
+    const idx = shifts.findIndex(s => s.date === shift.date);
+    if (idx >= 0) shifts[idx] = shift;
+    else shifts.push(shift);
+    saveShifts(shifts);
+  }
+
+  function loadActiveRun() {
+    try {
+      const raw = localStorage.getItem(ACTIVE_RUN_KEY);
+      if (!raw) return null;
+      const obj = JSON.parse(raw);
+      if (!obj || !obj.startTs) return null;
+      return obj;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveActiveRun(run) {
+    try {
+      if (!run) localStorage.removeItem(ACTIVE_RUN_KEY);
+      else localStorage.setItem(ACTIVE_RUN_KEY, JSON.stringify(run));
+    } catch (e) {
+      console.error("Failed to save active run", e);
+    }
+  }
+
+  function formatTimeForInput(date) {
+    const h = date.getHours().toString().padStart(2, "0");
+    const m = date.getMinutes().toString().padStart(2, "0");
+    return h + ":" + m;
+  }
+
+  function calcHours(start, end) {
+    if (!start || !end) return 0;
+    const ps = start.split(":");
+    const pe = end.split(":");
+    if (ps.length < 2 || pe.length < 2) return 0;
+    const sh = Number(ps[0]);
+    const sm = Number(ps[1]);
+    const eh = Number(pe[0]);
+    const em = Number(pe[1]);
+    if ([sh, sm, eh, em].some(Number.isNaN)) return 0;
+
+    let startMin = sh * 60 + sm;
+    let endMin = eh * 60 + em;
+    if (endMin < startMin) endMin += 24 * 60;
+    const diff = endMin - startMin;
+    if (diff <= 0) return 0;
+    return diff / 60;
+  }
+
+  function parseDateOnly(str) {
+    if (!str) return null;
+    return new Date(str + "T00:00:00");
+  }
+
+  function getWeekStart(d) {
+    const date = new Date(d.getTime());
+    const day = date.getDay();
+    const diff = (day + 6) % 7;
+    date.setDate(date.getDate() - diff);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  function syncShiftUI() {
+    const activeDate = dateEl.value || todayStr();
+    const shift = getShift(activeDate);
+    shiftStartKmEl.value = shift && shift.startKm != null ? shift.startKm : "";
+    shiftEndKmEl.value = shift && shift.endKm != null ? shift.endKm : "";
+    shiftFuelEl.value = shift && shift.fuel != null ? shift.fuel : "";
+  }
+
+  function updateShiftFromInputs() {
+    const activeDate = dateEl.value || todayStr();
+    if (!activeDate) return;
+
+    const startKm = parseFloat(shiftStartKmEl.value);
+    const endKm = parseFloat(shiftEndKmEl.value);
+    const fuel = parseFloat(shiftFuelEl.value);
+
+    const empty =
+      (isNaN(startKm) || shiftStartKmEl.value === "") &&
+      (isNaN(endKm) || shiftEndKmEl.value === "") &&
+      (isNaN(fuel) || shiftFuelEl.value === "");
+
+    if (empty) {
+      const filtered = loadShifts().filter(s => s.date !== activeDate);
+      saveShifts(filtered);
+    } else {
+      const shift = {
+        date: activeDate,
+        startKm: isNaN(startKm) ? null : startKm,
+        endKm: isNaN(endKm) ? null : endKm,
+        fuel: isNaN(fuel) ? null : fuel
+      };
+      upsertShift(shift);
+    }
+
+    updateShiftStats();
+  }
+
+  function updateShiftStats() {
+    const entries = loadEntries();
+    const activeDate = dateEl.value || todayStr();
+    const shift = getShift(activeDate);
+    if (!shift || shift.startKm == null || shift.endKm == null) {
+      shiftKmStatsEl.textContent =
+        "Set start and end km to see distance and efficiency for this date.";
+      return;
+    }
+
+    const km = shift.endKm - shift.startKm;
+    if (km <= 0) {
+      shiftKmStatsEl.textContent = "Check km values. End should be higher than start.";
+      return;
+    }
+
+    const shiftEntries = entries.filter(e => e.date === activeDate);
+    let shiftEarn = 0;
+    let shiftHours = 0;
+
+    shiftEntries.forEach(e => {
+      const h = calcHours(e.start, e.end);
+      shiftEarn += e.earnings || 0;
+      shiftHours += h;
+    });
+
+    const dollarsPerKm = km > 0 ? (shiftEarn / km).toFixed(2) : "0.00";
+    const kmPerHour = shiftHours > 0 ? (km / shiftHours).toFixed(1) : "0.0";
+
+    let fuelText = "";
+    if (shift.fuel != null && shift.fuel > 0) {
+      const lPer100 = (shift.fuel / km * 100).toFixed(1);
+      fuelText = " | " + lPer100 + " L/100km";
+    }
+
+    shiftKmStatsEl.textContent =
+      km.toFixed(1) + " km | $" + shiftEarn.toFixed(2) +
+      " (" + dollarsPerKm + " $/km) | " +
+      kmPerHour + " km/hr" + fuelText;
+  }
+
+  function startTimer() {
+    if (!activeRun || !activeRun.startTs) return;
+    if (timerInterval) clearInterval(timerInterval);
+
+    timerStatusEl.textContent = "ON DUTY";
+    const startTime = new Date(activeRun.startTs).getTime();
+
+    function tick() {
+      const now = Date.now();
+      let diff = Math.max(0, Math.floor((now - startTime) / 1000));
+      const h = Math.floor(diff / 3600).toString().padStart(2, "0");
+      diff %= 3600;
+      const m = Math.floor(diff / 60).toString().padStart(2, "0");
+      const s = (diff % 60).toString().padStart(2, "0");
+      runningTimerEl.textContent = h + ":" + m + ":" + s;
+    }
+
+    tick();
+    timerInterval = setInterval(tick, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = null;
+    timerStatusEl.textContent = "OFF DUTY";
+    runningTimerEl.textContent = "00:00:00";
+  }
+
+  function openEndModal(summaryText, onSelect) {
+    modalSummary.textContent = summaryText;
+    modalBackdrop.style.display = "flex";
+
+    const handlers = [];
+
+    modalOptionButtons().forEach(btn => {
+      const handler = () => {
+        const mode = btn.dataset.mode;
+        closeEndModal();
+        onSelect(mode);
+      };
+      btn.addEventListener("click", handler, { once: true });
+      handlers.push({ btn, handler });
+    });
+
+    const cancelHandler = () => {
+      closeEndModal();
+    };
+    modalCancelBtn.addEventListener("click", cancelHandler, { once: true });
+
+    function closeEndModal() {
+      modalBackdrop.style.display = "none";
+    }
+  }
+
+  function renderAnalytics(entries) {
+    if (!analyticsContent) return;
+    const activeTab = analyticsTabs.find(t => t.classList.contains("active"));
+    analyticsContent.innerHTML = "";
+
+    if (!entries.length) {
+      const d = document.createElement("div");
+      d.className = "helper";
+      d.textContent = "Charts show once you have some runs.";
+      analyticsContent.appendChild(d);
+      return;
+    }
+
+    const view = activeTab.dataset.view;
+    const activeDateStr = dateEl.value || todayStr();
+    const activeDate = parseDateOnly(activeDateStr) || new Date();
+
+    if (view === "weekly") {
+      const weekStart = getWeekStart(activeDate);
+      const weekEnd = new Date(weekStart.getTime());
+      weekEnd.setDate(weekEnd.getDate() + 7);
+
+      const daily = [0, 0, 0, 0, 0, 0, 0];
+
+      entries.forEach(e => {
+        if (!e.date) return;
+        const d = parseDateOnly(e.date);
+        if (!d || d < weekStart || d >= weekEnd) return;
+        const h = calcHours(e.start, e.end);
+        if (h <= 0) return;
+        const earn = e.earnings || 0;
+        const idx = (d.getDay() + 6) % 7;
+        daily[idx] += earn;
+      });
+
+      const max = Math.max(...daily, 0.01);
+
+      const title = document.createElement("div");
+      title.textContent = "Earnings this week (by day)";
+      analyticsContent.appendChild(title);
+
+      const wrap = document.createElement("div");
+      wrap.className = "week-bars";
+
+      const labels = ["M", "T", "W", "T", "F", "S", "S"];
+      daily.forEach((val, i) => {
+        const col = document.createElement("div");
+        col.className = "week-bar";
+        const fill = document.createElement("div");
+        fill.className = "week-bar-fill";
+        fill.style.height = (val / max * 100).toFixed(0) + "%";
+        const amt = document.createElement("div");
+        amt.style.fontSize = "0.6rem";
+        amt.textContent = val > 0 ? "$" + val.toFixed(0) : "";
+        const lab = document.createElement("div");
+        lab.className = "week-bar-label";
+        lab.textContent = labels[i];
+        col.appendChild(fill);
+        col.appendChild(amt);
+        col.appendChild(lab);
+        wrap.appendChild(col);
+      });
+
+      analyticsContent.appendChild(wrap);
+      const note = document.createElement("div");
+      note.className = "helper";
+      note.textContent = "Helps spot which days actually pay.";
+      analyticsContent.appendChild(note);
+    }
+
+    if (view === "apps") {
+      const byApp = {};
+      entries.forEach(e => {
+        const h = calcHours(e.start, e.end);
+        if (h <= 0) return;
+        const earn = e.earnings || 0;
+        if (!byApp[e.app]) byApp[e.app] = 0;
+        byApp[e.app] += earn;
+      });
+
+      const apps = Object.keys(byApp).filter(a => byApp[a] > 0);
+      if (!apps.length) {
+        const d = document.createElement("div");
+        d.className = "helper";
+        d.textContent = "No earnings yet to split by app.";
+        analyticsContent.appendChild(d);
+        return;
+      }
+
+      const total = apps.reduce((s, a) => s + byApp[a], 0);
+      const title = document.createElement("div");
+      title.textContent = "Earnings share by app (all time)";
+      analyticsContent.appendChild(title);
+
+      const bar = document.createElement("div");
+      bar.className = "app-share-bar";
+
+      const colors = [
+        "rgba(56,189,248,0.9)",
+        "rgba(22,163,74,0.9)",
+        "rgba(249,115,22,0.9)",
+        "rgba(129,140,248,0.9)",
+        "rgba(236,72,153,0.9)",
+        "rgba(148,163,253,0.9)"
+      ];
+
+      const legend = document.createElement("div");
+      legend.className = "app-share-legend";
+
+      apps.forEach((app, idx) => {
+        const share = byApp[app] / total;
+        const seg = document.createElement("div");
+        seg.className = "app-share-seg";
+        seg.style.flex = share.toFixed(4);
+        seg.style.background = colors[idx % colors.length];
+        bar.appendChild(seg);
+
+        const item = document.createElement("div");
+        item.className = "legend-item";
+        const sw = document.createElement("div");
+        sw.className = "legend-swatch";
+        sw.style.background = colors[idx % colors.length];
+        const txt = document.createElement("span");
+        txt.textContent =
+          app + " " + Math.round(share * 100) + "% ($" + byApp[app].toFixed(0) + ")";
+        item.appendChild(sw);
+        item.appendChild(txt);
+        legend.appendChild(item);
+      });
+
+      analyticsContent.appendChild(bar);
+      analyticsContent.appendChild(legend);
+
+      const note = document.createElement("div");
+      note.className = "helper";
+      note.textContent = "If one app is tiny, stop giving it free rent.";
+      analyticsContent.appendChild(note);
+    }
+  }
+
+  function render() {
+    const entries = loadEntries();
+    const activeDateStr = dateEl.value || todayStr();
+    const activeDate = parseDateOnly(activeDateStr) || new Date();
+
+    // Recent runs
+    entriesList.innerHTML = "";
+    if (!entries.length) {
+      const div = document.createElement("div");
+      div.className = "helper";
+      div.textContent =
+        "Log runs to see history. Everything here is editable.";
+      entriesList.appendChild(div);
+    } else {
+      entries.slice().reverse().forEach((e, idx) => {
+        const row = document.createElement("div");
+        row.className = "entry-row";
+
+        const dateLabel = new Date(e.date).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric"
+        });
+
+        const h = calcHours(e.start, e.end);
+        const rate = h > 0 && e.earnings ? e.earnings / h : 0;
+        const typeLabel =
+          e.quick
+            ? "Quick patch"
+            : e.auto === true
+            ? "Auto"
+            : e.auto === false
+            ? "Manual"
+            : "Legacy";
+        const durLabel = h > 0 ? h.toFixed(2) + "h" : "";
+
+        row.innerHTML = `
+          <span class="main">${dateLabel}</span>
+          <span class="app">${e.app}</span>
+          <span class="time">${e.start || "?"} - ${e.end || "?"}</span>
+          <span class="dur">${durLabel}</span>
+        `;
+
+        const rateSpan = document.createElement("span");
+        rateSpan.className = "rate";
+        rateSpan.textContent =
+          h > 0 && e.earnings ? "$" + rate.toFixed(1) + "/hr" : "-";
+        row.appendChild(rateSpan);
+
+        const meta = document.createElement("span");
+        meta.className = "meta";
+        meta.textContent = typeLabel;
+        row.appendChild(meta);
+
+        if (e.notes) {
+          const note = document.createElement("span");
+          note.className = "note";
+          note.textContent = e.notes;
+          row.appendChild(note);
+        }
+
+        const edit = document.createElement("span");
+        edit.className = "edit";
+        edit.textContent = "Edit";
+        edit.onclick = () => {
+          const realIndex = entries.length - 1 - idx;
+          const picked = entries[realIndex];
+          editingIndex = realIndex;
+
+          dateEl.value = picked.date;
+          syncShiftUI();
+
+          appButtons.forEach(b => {
+            if (b.dataset.app === picked.app) {
+              b.classList.add("active");
+              selectedApp = picked.app;
+            } else {
+              b.classList.remove("active");
+            }
+          });
+
+          startEl.value = picked.start || "";
+          endEl.value = picked.end || "";
+          earningsEl.value = picked.earnings || "";
+          ordersEl.value = picked.orders || "";
+          notesEl.value = picked.notes || "";
+
+          activeRun = null;
+          saveActiveRun(null);
+          stopTimer();
+
+          runningLabel.textContent =
+            "Editing existing run. Adjust fields, then press End to save changes.";
+          endRunBtn.textContent = "Save changes";
+        };
+        row.appendChild(edit);
+
+        const del = document.createElement("span");
+        del.className = "delete";
+        del.textContent = "Remove";
+        del.onclick = () => {
+          const realIndex = entries.length - 1 - idx;
+          entries.splice(realIndex, 1);
+          saveEntries(entries);
+          if (editingIndex === realIndex) {
+            editingIndex = null;
+            endRunBtn.textContent = "End";
+            runningLabel.textContent = "";
+          }
+          render();
+        };
+        row.appendChild(del);
+
+        entriesList.appendChild(row);
+      });
+    }
+
+    // Stats
+    let total = 0;
+    let totalHours = 0;
+    let todayEarn = 0;
+    let todayHours = 0;
+    let weekEarn = 0;
+    let weekHours = 0;
+
+    const weekStart = getWeekStart(activeDate);
+    const weekEnd = new Date(weekStart.getTime());
+    weekEnd.setDate(weekEnd.getDate() + 7);
+
+    const byApp = {};
+    const hourBuckets = {};
+
+    entries.forEach(e => {
+      if (!e.date) return;
+      const d = parseDateOnly(e.date);
+      if (!d) return;
+
+      const h = calcHours(e.start, e.end);
+      if (h <= 0) return;
+      const earn = e.earnings || 0;
+
+      total += earn;
+      totalHours += h;
+
+      if (!byApp[e.app]) byApp[e.app] = { earnings: 0, hours: 0 };
+      byApp[e.app].earnings += earn;
+      byApp[e.app].hours += h;
+
+      if (e.start) {
+        const parts = e.start.split(":");
+        const sh = parseInt(parts[0], 10);
+        if (!Number.isNaN(sh)) {
+          if (!hourBuckets[sh]) hourBuckets[sh] = { earnings: 0, hours: 0 };
+          hourBuckets[sh].earnings += earn;
+          hourBuckets[sh].hours += h;
+        }
+      }
+
+      const activeDateStr = dateEl.value || todayStr();
+      if (e.date === activeDateStr) {
+        todayEarn += earn;
+        todayHours += h;
+      }
+
+      if (d >= weekStart && d < weekEnd) {
+        weekEarn += earn;
+        weekHours += h;
+      }
+    });
+
+    const todayRate = todayHours > 0 ? (todayEarn / todayHours).toFixed(1) : "0.0";
+    const weekRate = weekHours > 0 ? (weekEarn / weekHours).toFixed(1) : "0.0";
+    const allRate = totalHours > 0 ? (total / totalHours).toFixed(1) : "0.0";
+
+    statTotal.textContent =
+      "Today $" + todayEarn.toFixed(2) +
+      " | Week $" + weekEarn.toFixed(2) +
+      " | All $" + total.toFixed(2);
+    statPerHour.textContent =
+      "Today $" + todayRate +
+      " | Week $" + weekRate +
+      " | All $" + allRate;
+
+    // Top app
+    let topApp = "None";
+    let topRate = 0;
+    Object.keys(byApp).forEach(app => {
+      const { earnings, hours } = byApp[app];
+      if (hours > 0) {
+        const r = earnings / hours;
+        if (r > topRate && earnings > 0) {
+          topRate = r;
+          topApp = app;
+        }
+      }
+    });
+    statTopApp.textContent =
+      topApp !== "None"
+        ? topApp + " (" + topRate.toFixed(1) + "/hr)"
+        : "None";
+
+    // Hot hours
+    let bestBucket = null;
+    let bestBucketRate = 0;
+    Object.keys(hourBuckets).forEach(hStr => {
+      const h = parseInt(hStr, 10);
+      const { earnings, hours } = hourBuckets[h];
+      if (hours > 0) {
+        const r = earnings / hours;
+        if (r > bestBucketRate && earnings > 0) {
+          bestBucketRate = r;
+          bestBucket = h;
+        }
+      }
+    });
+
+    if (bestBucket !== null) {
+      const endH = (bestBucket + 2) % 24;
+      const fmt = x => {
+        const suf = x >= 12 ? "pm" : "am";
+        const h12 = x % 12 === 0 ? 12 : x % 12;
+        return h12 + suf;
+      };
+      statHotHours.textContent =
+        fmt(bestBucket) + " to " + fmt(endH) +
+        " (" + bestBucketRate.toFixed(1) + "/hr)";
+    } else {
+      statHotHours.textContent = "Need more data";
+    }
+
+    updateShiftStats();
+    renderAnalytics(entries);
+
+    // Timer display
+    if (activeRun && activeRun.startTs) {
+      startTimer();
+      const started = new Date(activeRun.startTs);
+      const app = activeRun.app || selectedApp;
+      runningLabel.textContent =
+        "Running " + app + " since " +
+        started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    } else if (editingIndex === null) {
+      stopTimer();
+      runningLabel.textContent = "";
+      endRunBtn.textContent = "End";
+    }
+  }
+
+  // App selection
+  appButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      appButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedApp = btn.dataset.app;
+      if (activeRun && activeRun.startTs && editingIndex === null) {
+        const started = new Date(activeRun.startTs);
+        runningLabel.textContent =
+          "Running " + selectedApp + " since " +
+          started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      }
+    });
+  });
+
+  // Analytics tab switching
+  analyticsTabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      analyticsTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      render();
+    });
+  });
+
+  // Date change
+  dateEl.addEventListener("change", () => {
+    syncShiftUI();
+    render();
+  });
+
+  // Shift inputs
+  [shiftStartKmEl, shiftEndKmEl, shiftFuelEl].forEach(el => {
+    el.addEventListener("change", updateShiftFromInputs);
+    el.addEventListener("blur", updateShiftFromInputs);
+  });
+
+  // Start run
+  startRunBtn.addEventListener("click", () => {
+    if (editingIndex !== null) {
+      alert("Finish editing or clear the form before starting a new run.");
+      return;
+    }
+    if (activeRun && activeRun.startTs) {
+      alert("A run is already active. Hit End first.");
+      return;
+    }
+
+    const now = new Date();
+    const dateStr = todayStr();
+
+    activeRun = {
+      app: selectedApp,
+      startTs: now.toISOString(),
+      date: dateStr
+    };
+    saveActiveRun(activeRun);
+
+    dateEl.value = dateStr;
+    runningLabel.textContent =
+      "Running " + selectedApp + " since " +
+      now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+    startTimer();
+  });
+
+  // End run or save edit
+  endRunBtn.addEventListener("click", () => {
+    const entries = loadEntries();
+
+    // If editing, save form as manual
+    if (editingIndex !== null) {
+      const idx = editingIndex;
+      const base = entries[idx];
+
+      const date = dateEl.value || base.date || todayStr();
+      const app = selectedApp || base.app;
+      const start = startEl.value || base.start;
+      const end = endEl.value || base.end;
+      const earnings = parseFloat(earningsEl.value || base.earnings || "0");
+      const orders = parseInt(ordersEl.value || base.orders || "0", 10);
+      const notes = (notesEl.value || base.notes || "").trim();
+
+      if (!start || !end) {
+        alert("Set start and end.");
+        return;
+      }
+      if (!earnings || earnings <= 0) {
+        alert("Set earnings for this run.");
+        return;
+      }
+
+      const hours = calcHours(start, end);
+      if (hours <= 0) {
+        alert("Time range is invalid. Fix it.");
+        return;
+      }
+
+      entries[idx] = {
+        ...base,
+        date,
+        app,
+        start,
+        end,
+        earnings,
+        orders,
+        notes,
+        auto: false,
+        quick: false
+      };
+      saveEntries(entries);
+
+      editingIndex = null;
+      endRunBtn.textContent = "End";
+      runningLabel.textContent = "";
+      startEl.value = "";
+      endEl.value = "";
+      earningsEl.value = "";
+      ordersEl.value = "";
+      notesEl.value = "";
+
+      render();
+      return;
+    }
+
+    // If active run exists, show modal with options
+    if (activeRun && activeRun.startTs) {
+      const startDate = new Date(activeRun.startTs);
+      const now = new Date();
+      const fullStart = formatTimeForInput(startDate);
+      const fullEnd = formatTimeForInput(now);
+      const fullHours = calcHours(fullStart, fullEnd).toFixed(2);
+
+      const text =
+        "Start: " + fullStart +
+        "  End: " + fullEnd +
+        "  Full duration: " + fullHours + "h. Choose how to log this.";
+
+      openEndModal(text, mode => {
+        const entries = loadEntries();
+        const date = activeRun.date || todayStr();
+        const app = activeRun.app || selectedApp;
+
+        let start = fullStart;
+        let end = fullEnd;
+        let quick = false;
+        let auto = false;
+
+        if (mode === "full") {
+          auto = true;
+        } else {
+          quick = true;
+          const mins = parseInt(mode, 10);
+          const patchedEnd = new Date(startDate.getTime() + mins * 60000);
+          end = formatTimeForInput(patchedEnd);
+        }
+
+        const earningsInput = prompt(
+          "Earnings for this run (leave blank if zero or unknown):",
+          ""
+        );
+        if (earningsInput === null) {
+          // user backed out, keep activeRun
+          return;
+        }
+        const earnings = parseFloat(earningsInput || "0") || 0;
+
+        const ordersInput = prompt(
+          "Orders in this run (optional):",
+          ""
+        );
+        const orders = ordersInput ? parseInt(ordersInput, 10) || 0 : 0;
+
+        const hours = calcHours(start, end);
+        if (hours <= 0) {
+          alert("Time range came out invalid. Adjust manually in the editor.");
+        }
+
+        entries.push({
+          date,
+          app,
+          start,
+          end,
+          earnings,
+          orders,
+          notes: quick
+            ? "Quick " + mode + " min patch from auto dialog"
+            : "Auto run from Start to End",
+          auto,
+          quick
+        });
+        saveEntries(entries);
+
+        activeRun = null;
+        saveActiveRun(null);
+        stopTimer();
+        runningLabel.textContent = "";
+
+        render();
+      });
+
+      return;
+    }
+
+    // No active run, treat as manual add using form
+    const date = dateEl.value || todayStr();
+    const app = selectedApp;
+    const start = startEl.value;
+    const end = endEl.value;
+    const earnings = parseFloat(earningsEl.value || "0");
+    const orders = parseInt(ordersEl.value || "0", 10);
+    const notes = notesEl.value.trim();
+
+    if (!start || !end) {
+      alert("No active run. Use Start/End flow, or fill start and end manually.");
+      return;
+    }
+    if (!earnings || earnings <= 0) {
+      alert("Enter earnings for this run.");
+      return;
+    }
+
+    const hours = calcHours(start, end);
+    if (hours <= 0) {
+      alert("Time math off. Fix start or end.");
+      return;
+    }
+
+    entries.push({
+      date,
+      app,
+      start,
+      end,
+      earnings,
+      orders,
+      notes,
+      auto: false,
+      quick: false
+    });
+    saveEntries(entries);
+
+    startEl.value = "";
+    endEl.value = "";
+    earningsEl.value = "";
+    ordersEl.value = "";
+    notesEl.value = "";
+
+    render();
+  });
+
+  // Clear all
+  clearAllBtn.addEventListener("click", () => {
+    const ok = confirm("Wipe all runs and shift data from this device");
+    if (!ok) return;
+
+    saveEntries([]);
+    saveShifts([]);
+    activeRun = null;
+    saveActiveRun(null);
+    editingIndex = null;
+
+    stopTimer();
+    dateEl.value = todayStr();
+    shiftStartKmEl.value = "";
+    shiftEndKmEl.value = "";
+    shiftFuelEl.value = "";
+    startEl.value = "";
+    endEl.value = "";
+    earningsEl.value = "";
+    ordersEl.value = "";
+    notesEl.value = "";
+    runningLabel.textContent = "";
+    endRunBtn.textContent = "End";
+
+    render();
+  });
+
+  // Init
+  setTodayIfEmpty();
+  syncShiftUI();
+  render();
+});
+</script>
+</body>
+</html>
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-size: 0.66rem;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      backdrop-filter: blur(8px);
+    }
+
+    .card {
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 50%) no-repeat,
+        var(--card);
+      border-radius: var(--radius-xxl);
+      padding: 14px 14px 10px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 253, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-label {
+      font-size: 0.74rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .section-title {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .app-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .app-btn {
+      padding: 10px 8px;
+      font-size: 0.9rem;
+      border-radius: 16px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(5, 12, 25, 0.98);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .app-btn span {
+      font-weight: 600;
+    }
+
+    .app-btn.active {
+      background: linear-gradient(to right, var(--accent), #22c55e);
+      color: #020817;
+      border-color: transparent;
+      box-shadow: 0 8px 20px rgba(56,189,248,0.35);
+      transform: translateY(-1px);
+    }
+
+    .app-btn:hover:not(.active) {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.8);
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .field,
+    .field-full {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .field-full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    input {
+      padding: 10px 10px;
+      font-size: 1.05rem;
+      border-radius: 14px;
+      border: 1px solid rgba(75,85,99,0.9);
+      background: rgba(5, 12, 25, 0.98);
+      color: var(--text);
+      outline: none;
+      width: 100%;
+      -webkit-appearance: none;
+      appearance: none;
+      transition:
+        border-color var(--transition-fast),
+        background var(--transition-fast),
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast);
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      background: rgba(5, 13, 27, 1);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 2px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 11px 10px;
+      border-radius: 999px;
+      border: none;
+      font-size: 1.02rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      flex: 1.6;
+      background: linear-gradient(to right, var(--accent), #22c55e);
+      color: #020817;
+      box-shadow: 0 10px 26px rgba(56,189,248,0.32);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(56,189,248,0.42);
+    }
+
+    .btn-secondary {
+      flex: 1.2;
+      background: rgba(9, 9, 11, 0.98);
+      color: var(--muted);
+      border: 1px solid rgba(75,85,99,0.9);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,1);
+      color: var(--accent);
+      border-color: rgba(56,189,248,0.22);
+      transform: translateY(-1px);
+    }
+
+    .btn-subtle {
+      flex: 0.9;
+      background: transparent;
+      color: var(--danger);
+      border: 1px solid rgba(75,85,99,0.9);
+      font-size: 0.8rem;
+    }
+
+    .btn-subtle:hover {
+      background: rgba(15,23,42,1);
+      border-color: var(--danger);
+      transform: translateY(-1px);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px 10px 8px;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top, var(--accent-soft), transparent 80%) no-repeat,
+        rgba(6, 11, 23, 0.96);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+    }
+
+    .stat-value {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-top: 2px;
+      line-height: 1.25;
+    }
+
+    .stat-note {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 2px;
+      max-width: 180px;
+    }
+
+    .entries-card {
+      max-height: 280px;
+      overflow-y: auto;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(75,85,99,0.9);
+      padding: 6px 6px 4px;
+      background: rgba(3,7,18,0.98);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      scrollbar-width: thin;
+    }
+
+    .entry-row {
+      display: grid;
+      grid-template-columns: 0.9fr 0.9fr 1.4fr 0.8fr;
+      gap: 4px;
+      padding: 6px 6px;
+      border-radius: 10px;
+      background: rgba(9,9,11,1);
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .entry-row span.main {
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.74rem;
+    }
+
+    .entry-row span.app {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .entry-row span.time,
+    .entry-row span.dur {
+      font-size: 0.65rem;
+    }
+
+    .entry-row span.rate {
+      color: #22c55e;
+      font-weight: 600;
+      font-size: 0.7rem;
+      grid-column: 1 / 3;
+      margin-top: 1px;
+    }
+
+    .entry-row span.meta {
+      grid-column: 3 / 5;
+      text-align: right;
+      font-size: 0.6rem;
+      color: #60a5fa;
+      margin-top: 1px;
+    }
+
+    .entry-row span.note {
+      grid-column: 1 / 5;
+      font-size: 0.62rem;
+      color: #6b7280;
+    }
+
+    .entry-row span.edit,
+    .entry-row span.delete {
+      font-size: 0.6rem;
+      cursor: pointer;
+      opacity: 0.78;
+    }
+
+    .entry-row span.edit {
+      grid-column: 1 / 2;
+      color: #38bdf8;
+      margin-top: 1px;
+    }
+
+    .entry-row span.delete {
+      grid-column: 4 / 5;
+      text-align: right;
+      color: var(--danger);
+      margin-top: 1px;
+    }
+
+    .helper {
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-top: -2px;
+    }
+
+    .running-label {
+      font-size: 0.7rem;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
     .manual-note {
       font-size: 0.6rem;
       color: var(--muted);
