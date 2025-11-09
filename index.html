@@ -138,7 +138,7 @@
       transform: translateY(-1px);
     }
 
-    .app-btn:hover:not(.active) {
+    .app-btn:hover:not(.active)) {
       border-color: var(--accent);
       color: var(--accent);
       transform: translateY(-1px);
@@ -375,6 +375,21 @@
       text-align: right;
       color: var(--danger);
       margin-top: 1px;
+    }
+
+    .entry-row.summary {
+      background: rgba(8, 18, 35, 1);
+      border: 1px solid rgba(56,189,248,0.25);
+    }
+
+    .entry-row.summary span.main {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .entry-row.summary span.dur {
+      color: #22c55e;
+      font-weight: 600;
     }
 
     .helper {
@@ -619,12 +634,14 @@
 <div class="app">
   <header class="header">
     <div class="title">ShiftIntel</div>
-    <div class="subtitle">Start once, big timer. On End, choose full run or 10 / 20 / 30 minute patch.</div>
+    <div class="subtitle">
+      Start shift, see a live timer, log runs fast, and track performance by shift, week, and all time.
+    </div>
     <div class="pill-row">
       <div class="pill">Shift / Week / All time</div>
       <div class="pill">Multi app</div>
       <div class="pill">Auto run builder</div>
-      <div class="pill">Km & fuel aware</div>
+      <div class="pill">Km and fuel aware</div>
     </div>
   </header>
 
@@ -642,14 +659,22 @@
     </div>
   </section>
 
-  <!-- Shift info: km and fuel -->
+  <!-- Shift info: date, shift times, km, fuel -->
   <section class="card">
     <div class="card-label">Shift info</div>
-    <div class="section-title">Date, odometer, fuel</div>
+    <div class="section-title">Shift start / end and odometer</div>
     <div class="field-grid">
       <div class="field">
         <label for="date">Active date</label>
         <input type="date" id="date" />
+      </div>
+      <div class="field">
+        <label for="shiftStartTime">Shift start time</label>
+        <input type="time" id="shiftStartTime" />
+      </div>
+      <div class="field">
+        <label for="shiftEndTime">Shift end time</label>
+        <input type="time" id="shiftEndTime" />
       </div>
       <div class="field">
         <label for="shiftStartKm">Start odometer (km)</label>
@@ -665,21 +690,22 @@
       </div>
     </div>
     <div id="shiftKmStats" class="shift-summary">
-      Add start and end km for this date to see distance, cost per km, and efficiency.
+      Set shift start, and optionally end, plus km, and this will track distance, efficiency, and shift length.
     </div>
   </section>
 
   <!-- Duty timer and run controls -->
   <section class="card">
     <div class="card-label">On duty timer</div>
-    <div class="section-title">Tap Start to go on duty, tap End to define the run</div>
+    <div class="section-title">Tap Start when your shift begins, tap End to log a block as a run</div>
     <div class="timer-wrap">
       <div class="timer-label" id="timerStatus">OFF DUTY</div>
       <div class="timer-value" id="runningTimer">00:00:00</div>
     </div>
     <div id="runningLabel" class="running-label"></div>
     <div class="helper">
-      End will pop choices: use full Start to End, or build a 10 / 20 / 30 minute run from the Start timestamp.
+      When you hit End, choose to log the full block or a 10 / 20 / 30 minute run based on the Start time.
+      Shift start is set the first time you hit Start for the day, so day averages can use true shift time.
     </div>
     <div class="btn-row">
       <button class="btn-primary" id="startRunBtn">Start</button>
@@ -691,7 +717,7 @@
   <!-- Manual / edit run form -->
   <section class="card">
     <div class="card-label">Manual or edit entry</div>
-    <div class="section-title">Use if you need to correct or fully custom log a run</div>
+    <div class="section-title">Use this if you need to correct or custom log a run</div>
     <div class="field-grid">
       <div class="field">
         <label for="earnings">Run earnings ($)</label>
@@ -715,7 +741,7 @@
       </div>
     </div>
     <div class="helper">
-      When editing a run, fields will load here. Saving uses this form instead of the auto dialog.
+      Editing a run will load its values here. Save changes using the End button.
     </div>
   </section>
 
@@ -728,24 +754,26 @@
         <div class="stat-value" id="statTotal">
           Today $0.00 | Week $0.00 | All $0.00
         </div>
-        <div class="stat-note">Today is active date. Week is the week containing that date.</div>
+        <div class="stat-note">Today is the active date. Week is the week containing that date.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Avg $ / hour</div>
         <div class="stat-value" id="statPerHour">
           Today $0.0 | Week $0.0 | All $0.0
         </div>
-        <div class="stat-note">This is the number that decides if you stay online.</div>
+        <div class="stat-note">
+          Shows run based rate, and when shift times are set, also shift based rate for today.
+        </div>
       </div>
       <div class="stat">
         <div class="stat-label">Top app</div>
         <div class="stat-value" id="statTopApp">None</div>
-        <div class="stat-note">Based on hourly, not order count.</div>
+        <div class="stat-note">Based on hourly earnings, not number of pings.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Hot hours</div>
         <div class="stat-value" id="statHotHours">Need more data</div>
-        <div class="stat-note">Best 2 hour window from all runs.</div>
+        <div class="stat-note">Best 2 hour window so far from your history.</div>
       </div>
     </div>
   </section>
@@ -758,7 +786,7 @@
       <button class="analytics-tab" data-view="apps">App share</button>
     </div>
     <div id="analyticsContent" class="analytics-content">
-      <div class="helper">Charts activate when you have runs logged.</div>
+      <div class="helper">Charts activate once you have logged some runs.</div>
     </div>
   </section>
 
@@ -767,7 +795,7 @@
     <div class="card-label">Recent runs</div>
     <div class="entries-card" id="entriesList">
       <div class="helper">
-        Date, app, start, end, duration, hourly, log type, notes, edit / remove.
+        Shows "Today so far" plus each run: date, app, times, duration, hourly rate, type, notes, edit and remove.
       </div>
     </div>
   </section>
@@ -777,9 +805,7 @@
 <div class="modal-backdrop" id="endModalBackdrop">
   <div class="modal" id="endModal">
     <div class="modal-title">How do you want to log this run</div>
-    <div class="modal-text" id="modalSummary">
-      <!-- filled by script -->
-    </div>
+    <div class="modal-text" id="modalSummary"></div>
     <div class="modal-options">
       <button class="modal-btn" data-mode="full">
         <span class="label">Use full run</span>
@@ -791,11 +817,11 @@
       </button>
       <button class="modal-btn" data-mode="20">
         <span class="label">20 min from Start</span>
-        <span>For short gaps.</span>
+        <span>Short missed run.</span>
       </button>
       <button class="modal-btn" data-mode="30">
         <span class="label">30 min from Start</span>
-        <span>For longer forgotten runs.</span>
+        <span>Longer missed run.</span>
       </button>
     </div>
     <div class="modal-actions">
@@ -806,11 +832,13 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const STORAGE_KEY = "shiftintel_runs_v7";
-  const ACTIVE_RUN_KEY = "shiftintel_active_run_v7";
-  const SHIFT_KEY = "shiftintel_shifts_v1";
+  const STORAGE_KEY = "shiftintel_runs_v8";
+  const ACTIVE_RUN_KEY = "shiftintel_active_run_v8";
+  const SHIFT_KEY = "shiftintel_shifts_v2";
 
   const dateEl = document.getElementById("date");
+  const shiftStartTimeEl = document.getElementById("shiftStartTime");
+  const shiftEndTimeEl = document.getElementById("shiftEndTime");
   const shiftStartKmEl = document.getElementById("shiftStartKm");
   const shiftEndKmEl = document.getElementById("shiftEndKm");
   const shiftFuelEl = document.getElementById("shiftFuel");
@@ -835,19 +863,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const endRunBtn = document.getElementById("endRunBtn");
   const clearAllBtn = document.getElementById("clearAllBtn");
 
-  const appButtonsContainer = document.getElementById("appButtons");
-  const appButtons = appButtonsContainer
-    ? Array.from(appButtonsContainer.querySelectorAll(".app-btn"))
-    : [];
-
+  const appButtons = Array.from(document.querySelectorAll("#appButtons .app-btn"));
   const analyticsTabs = Array.from(document.querySelectorAll(".analytics-tab"));
   const analyticsContent = document.getElementById("analyticsContent");
 
   const modalBackdrop = document.getElementById("endModalBackdrop");
   const modalSummary = document.getElementById("modalSummary");
   const modalCancelBtn = document.getElementById("modalCancelBtn");
-  const modalOptionButtons = () =>
-    Array.from(document.querySelectorAll(".modal-btn"));
+  const modalOptionButtons = () => Array.from(document.querySelectorAll(".modal-btn"));
 
   let selectedApp = "Uber Eats";
   let activeRun = loadActiveRun();
@@ -858,8 +881,53 @@ document.addEventListener("DOMContentLoaded", () => {
     return new Date().toISOString().slice(0, 10);
   }
 
-  function setTodayIfEmpty() {
-    if (!dateEl.value) dateEl.value = todayStr();
+  function formatTimeForInput(date) {
+    const h = date.getHours().toString().padStart(2, "0");
+    const m = date.getMinutes().toString().padStart(2, "0");
+    return h + ":" + m;
+  }
+
+  function calcHours(start, end) {
+    if (!start || !end) return 0;
+    const ps = start.split(":");
+    const pe = end.split(":");
+    if (ps.length < 2 || pe.length < 2) return 0;
+    const sh = Number(ps[0]);
+    const sm = Number(ps[1]);
+    const eh = Number(pe[0]);
+    const em = Number(pe[1]);
+    if ([sh, sm, eh, em].some(Number.isNaN)) return 0;
+
+    let startMin = sh * 60 + sm;
+    let endMin = eh * 60 + em;
+    if (endMin < startMin) endMin += 24 * 60;
+    const diff = endMin - startMin;
+    if (diff <= 0) return 0;
+    return diff / 60;
+  }
+
+  function formatDurationHM(hours) {
+    if (!hours || hours <= 0) return "";
+    const totalMin = Math.round(hours * 60);
+    const h = Math.floor(totalMin / 60);
+    const m = totalMin % 60;
+    if (h > 0 && m > 0) return h + "h " + m + "m";
+    if (h > 0) return h + "h";
+    return m + "m";
+  }
+
+  function parseDateOnly(str) {
+    if (!str) return null;
+    return new Date(str + "T00:00:00");
+  }
+
+  function getWeekStart(d) {
+    const date = new Date(d.getTime());
+    const day = date.getDay();
+    const diff = (day + 6) % 7;
+    date.setDate(date.getDate() - diff);
+    date.setHours(0, 0, 0, 0);
+    return date;
   }
 
   function loadEntries() {
@@ -932,48 +1000,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function formatTimeForInput(date) {
-    const h = date.getHours().toString().padStart(2, "0");
-    const m = date.getMinutes().toString().padStart(2, "0");
-    return h + ":" + m;
-  }
-
-  function calcHours(start, end) {
-    if (!start || !end) return 0;
-    const ps = start.split(":");
-    const pe = end.split(":");
-    if (ps.length < 2 || pe.length < 2) return 0;
-    const sh = Number(ps[0]);
-    const sm = Number(ps[1]);
-    const eh = Number(pe[0]);
-    const em = Number(pe[1]);
-    if ([sh, sm, eh, em].some(Number.isNaN)) return 0;
-
-    let startMin = sh * 60 + sm;
-    let endMin = eh * 60 + em;
-    if (endMin < startMin) endMin += 24 * 60;
-    const diff = endMin - startMin;
-    if (diff <= 0) return 0;
-    return diff / 60;
-  }
-
-  function parseDateOnly(str) {
-    if (!str) return null;
-    return new Date(str + "T00:00:00");
-  }
-
-  function getWeekStart(d) {
-    const date = new Date(d.getTime());
-    const day = date.getDay();
-    const diff = (day + 6) % 7;
-    date.setDate(date.getDate() - diff);
-    date.setHours(0, 0, 0, 0);
-    return date;
+  function setTodayIfEmpty() {
+    if (!dateEl.value) dateEl.value = todayStr();
   }
 
   function syncShiftUI() {
     const activeDate = dateEl.value || todayStr();
     const shift = getShift(activeDate);
+    shiftStartTimeEl.value = shift && shift.startTime ? shift.startTime : "";
+    shiftEndTimeEl.value = shift && shift.endTime ? shift.endTime : "";
     shiftStartKmEl.value = shift && shift.startKm != null ? shift.startKm : "";
     shiftEndKmEl.value = shift && shift.endKm != null ? shift.endKm : "";
     shiftFuelEl.value = shift && shift.fuel != null ? shift.fuel : "";
@@ -986,8 +1021,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const startKm = parseFloat(shiftStartKmEl.value);
     const endKm = parseFloat(shiftEndKmEl.value);
     const fuel = parseFloat(shiftFuelEl.value);
+    const startTime = shiftStartTimeEl.value || "";
+    const endTime = shiftEndTimeEl.value || "";
 
     const empty =
+      !startTime &&
+      !endTime &&
       (isNaN(startKm) || shiftStartKmEl.value === "") &&
       (isNaN(endKm) || shiftEndKmEl.value === "") &&
       (isNaN(fuel) || shiftFuelEl.value === "");
@@ -998,6 +1037,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       const shift = {
         date: activeDate,
+        startTime: startTime || null,
+        endTime: endTime || null,
         startKm: isNaN(startKm) ? null : startKm,
         endKm: isNaN(endKm) ? null : endKm,
         fuel: isNaN(fuel) ? null : fuel
@@ -1006,15 +1047,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateShiftStats();
+    render(); // to refresh shift based metrics
+  }
+
+  function calcShiftHoursForDate(dateStr) {
+    const shift = getShift(dateStr);
+    if (!shift || !shift.startTime) return 0;
+
+    let endTimeStr = null;
+
+    if (shift.endTime) {
+      endTimeStr = shift.endTime;
+    } else if (dateStr === todayStr()) {
+      endTimeStr = formatTimeForInput(new Date());
+    }
+
+    if (!endTimeStr) return 0;
+
+    return calcHours(shift.startTime, endTimeStr);
   }
 
   function updateShiftStats() {
     const entries = loadEntries();
     const activeDate = dateEl.value || todayStr();
     const shift = getShift(activeDate);
+
     if (!shift || shift.startKm == null || shift.endKm == null) {
       shiftKmStatsEl.textContent =
-        "Set start and end km to see distance and efficiency for this date.";
+        "Add shift start and end km to see distance, dollars per km, and shift duration.";
       return;
     }
 
@@ -1026,16 +1086,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const shiftEntries = entries.filter(e => e.date === activeDate);
     let shiftEarn = 0;
-    let shiftHours = 0;
+    let shiftHoursRuns = 0;
 
     shiftEntries.forEach(e => {
       const h = calcHours(e.start, e.end);
       shiftEarn += e.earnings || 0;
-      shiftHours += h;
+      shiftHoursRuns += h;
     });
 
     const dollarsPerKm = km > 0 ? (shiftEarn / km).toFixed(2) : "0.00";
-    const kmPerHour = shiftHours > 0 ? (km / shiftHours).toFixed(1) : "0.0";
+    const kmPerHour = shiftHoursRuns > 0 ? (km / shiftHoursRuns).toFixed(1) : "0.0";
 
     let fuelText = "";
     if (shift.fuel != null && shift.fuel > 0) {
@@ -1043,10 +1103,22 @@ document.addEventListener("DOMContentLoaded", () => {
       fuelText = " | " + lPer100 + " L/100km";
     }
 
+    let shiftTimePart = "";
+    const shiftHours = calcShiftHoursForDate(activeDate);
+    if (shiftHours > 0) {
+      shiftTimePart =
+        " | Shift " +
+        (shift.startTime || "") +
+        (shift.endTime ? " - " + shift.endTime : " - now") +
+        " (" + formatDurationHM(shiftHours) + ")";
+    }
+
     shiftKmStatsEl.textContent =
       km.toFixed(1) + " km | $" + shiftEarn.toFixed(2) +
       " (" + dollarsPerKm + " $/km) | " +
-      kmPerHour + " km/hr" + fuelText;
+      kmPerHour + " km/hr (run time)" +
+      fuelText +
+      shiftTimePart;
   }
 
   function startTimer() {
@@ -1081,8 +1153,6 @@ document.addEventListener("DOMContentLoaded", () => {
     modalSummary.textContent = summaryText;
     modalBackdrop.style.display = "flex";
 
-    const handlers = [];
-
     modalOptionButtons().forEach(btn => {
       const handler = () => {
         const mode = btn.dataset.mode;
@@ -1090,7 +1160,6 @@ document.addEventListener("DOMContentLoaded", () => {
         onSelect(mode);
       };
       btn.addEventListener("click", handler, { once: true });
-      handlers.push({ btn, handler });
     });
 
     const cancelHandler = () => {
@@ -1167,6 +1236,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       analyticsContent.appendChild(wrap);
+
       const note = document.createElement("div");
       note.className = "helper";
       note.textContent = "Helps spot which days actually pay.";
@@ -1238,7 +1308,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "If one app is tiny, stop giving it free rent.";
+      note.textContent = "If one app is tiny, reconsider your loyalty.";
       analyticsContent.appendChild(note);
     }
   }
@@ -1247,9 +1317,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const entries = loadEntries();
     const activeDateStr = dateEl.value || todayStr();
     const activeDate = parseDateOnly(activeDateStr) || new Date();
+    const weekStart = getWeekStart(activeDate);
+    const weekEnd = new Date(weekStart.getTime());
+    weekEnd.setDate(weekEnd.getDate() + 7);
 
-    // Recent runs
+    const shift = getShift(activeDateStr);
+    const shiftHoursForActive = calcShiftHoursForDate(activeDateStr);
+
+    // Recent runs and "Today so far"
     entriesList.innerHTML = "";
+
     if (!entries.length) {
       const div = document.createElement("div");
       div.className = "helper";
@@ -1257,14 +1334,52 @@ document.addEventListener("DOMContentLoaded", () => {
         "Log runs to see history. Everything here is editable.";
       entriesList.appendChild(div);
     } else {
+      const todaysEntries = entries.filter(e => e.date === activeDateStr);
+      if (todaysEntries.length) {
+        let cumEarn = 0;
+        let cumHours = 0;
+        todaysEntries.forEach(e => {
+          const h = calcHours(e.start, e.end);
+          if (h > 0) {
+            cumHours += h;
+            cumEarn += e.earnings || 0;
+          }
+        });
+
+        const runAvg = cumHours > 0 ? cumEarn / cumHours : 0;
+        const summaryRow = document.createElement("div");
+        summaryRow.className = "entry-row summary";
+
+        let labelDur = formatDurationHM(cumHours);
+        let labelRate = "$" + cumEarn.toFixed(2) +
+          (runAvg > 0 ? " (" + runAvg.toFixed(1) + "/hr runs" : "") +
+          ")";
+
+        if (shiftHoursForActive > 0 && cumEarn > 0) {
+          const shiftRate = cumEarn / shiftHoursForActive;
+          labelRate =
+            "$" + cumEarn.toFixed(2) +
+            " (" + runAvg.toFixed(1) + "/hr runs, " +
+            shiftRate.toFixed(1) + "/hr shift)";
+        }
+
+        summaryRow.innerHTML = `
+          <span class="main">Today so far</span>
+          <span class="app">${todaysEntries.length} runs</span>
+          <span class="time">${labelDur || "-"}</span>
+          <span class="dur">${labelRate}</span>
+        `;
+        entriesList.appendChild(summaryRow);
+      }
+
       entries.slice().reverse().forEach((e, idx) => {
         const row = document.createElement("div");
         row.className = "entry-row";
 
-        const dateLabel = new Date(e.date).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric"
-        });
+        const d = parseDateOnly(e.date);
+        const dateLabel = d
+          ? d.toLocaleDateString(undefined, { month: "short", day: "numeric" })
+          : e.date || "";
 
         const h = calcHours(e.start, e.end);
         const rate = h > 0 && e.earnings ? e.earnings / h : 0;
@@ -1276,7 +1391,7 @@ document.addEventListener("DOMContentLoaded", () => {
             : e.auto === false
             ? "Manual"
             : "Legacy";
-        const durLabel = h > 0 ? h.toFixed(2) + "h" : "";
+        const durLabel = formatDurationHM(h);
 
         row.innerHTML = `
           <span class="main">${dateLabel}</span>
@@ -1359,17 +1474,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Stats
+    // Stats based on runs
     let total = 0;
     let totalHours = 0;
     let todayEarn = 0;
     let todayHours = 0;
     let weekEarn = 0;
     let weekHours = 0;
-
-    const weekStart = getWeekStart(activeDate);
-    const weekEnd = new Date(weekStart.getTime());
-    weekEnd.setDate(weekEnd.getDate() + 7);
 
     const byApp = {};
     const hourBuckets = {};
@@ -1400,7 +1511,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      const activeDateStr = dateEl.value || todayStr();
       if (e.date === activeDateStr) {
         todayEarn += earn;
         todayHours += h;
@@ -1420,10 +1530,22 @@ document.addEventListener("DOMContentLoaded", () => {
       "Today $" + todayEarn.toFixed(2) +
       " | Week $" + weekEarn.toFixed(2) +
       " | All $" + total.toFixed(2);
-    statPerHour.textContent =
+
+    let perHourText =
       "Today $" + todayRate +
       " | Week $" + weekRate +
       " | All $" + allRate;
+
+    if (shiftHoursForActive > 0 && todayEarn > 0) {
+      const shiftRate = (todayEarn / shiftHoursForActive).toFixed(1);
+      perHourText =
+        "Today runs $" + todayRate +
+        " / shift $" + shiftRate +
+        " | Week $" + weekRate +
+        " | All $" + allRate;
+    }
+
+    statPerHour.textContent = perHourText;
 
     // Top app
     let topApp = "None";
@@ -1521,7 +1643,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Shift inputs
-  [shiftStartKmEl, shiftEndKmEl, shiftFuelEl].forEach(el => {
+  [shiftStartTimeEl, shiftEndTimeEl, shiftStartKmEl, shiftEndKmEl, shiftFuelEl].forEach(el => {
     el.addEventListener("change", updateShiftFromInputs);
     el.addEventListener("blur", updateShiftFromInputs);
   });
@@ -1547,19 +1669,29 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     saveActiveRun(activeRun);
 
+    // Auto set shift start time for this date if not already set
+    const existingShift = getShift(dateStr) || { date: dateStr };
+    if (!existingShift.startTime) {
+      existingShift.startTime = formatTimeForInput(now);
+      upsertShift(existingShift);
+      shiftStartTimeEl.value = existingShift.startTime;
+    }
+
     dateEl.value = dateStr;
     runningLabel.textContent =
       "Running " + selectedApp + " since " +
       now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
     startTimer();
+    updateShiftStats();
+    render();
   });
 
   // End run or save edit
   endRunBtn.addEventListener("click", () => {
     const entries = loadEntries();
 
-    // If editing, save form as manual
+    // Editing existing run
     if (editingIndex !== null) {
       const idx = editingIndex;
       const base = entries[idx];
@@ -1614,7 +1746,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // If active run exists, show modal with options
+    // Active run uses modal
     if (activeRun && activeRun.startTs) {
       const startDate = new Date(activeRun.startTs);
       const now = new Date();
@@ -1651,7 +1783,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ""
         );
         if (earningsInput === null) {
-          // user backed out, keep activeRun
           return;
         }
         const earnings = parseFloat(earningsInput || "0") || 0;
@@ -1693,7 +1824,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // No active run, treat as manual add using form
+    // Manual new run
     const date = dateEl.value || todayStr();
     const app = selectedApp;
     const start = startEl.value;
@@ -1703,7 +1834,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const notes = notesEl.value.trim();
 
     if (!start || !end) {
-      alert("No active run. Use Start/End flow, or fill start and end manually.");
+      alert("No active run. Use Start/End, or fill start and end manually.");
       return;
     }
     if (!earnings || earnings <= 0) {
@@ -1752,6 +1883,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     stopTimer();
     dateEl.value = todayStr();
+    shiftStartTimeEl.value = "";
+    shiftEndTimeEl.value = "";
     shiftStartKmEl.value = "";
     shiftEndKmEl.value = "";
     shiftFuelEl.value = "";
