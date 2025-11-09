@@ -493,7 +493,7 @@
     </div>
 
     <div class="helper">
-      Normal flow: Select app, tap Start to begin, tap End to save. Manual times are allowed and kept accurate.
+      Normal flow: select app, tap Start to begin, tap End to save. Manual times are allowed.
     </div>
     <div id="runningLabel" class="running-label"></div>
     <div class="manual-note">
@@ -516,24 +516,24 @@
         <div class="stat-value" id="statTotal">
           Today $0.00 | Week $0.00 | All $0.00
         </div>
-        <div class="stat-note">All values from your saved runs. Today based on active date.</div>
+        <div class="stat-note">Today based on active date. Week based on week of that date.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Average $ / hour</div>
         <div class="stat-value" id="statPerHour">
           Today $0.0 | Week $0.0 | All $0.0
         </div>
-        <div class="stat-note">Use this to judge if a block of time is worth staying online.</div>
+        <div class="stat-note">This is the number that decides if a block is worth your time.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Top app (all time)</div>
         <div class="stat-value" id="statTopApp">None</div>
-        <div class="stat-note">Based on all runs and their hourly rate.</div>
+        <div class="stat-note">Based on average hourly rate.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Hot hours (all time)</div>
         <div class="stat-value" id="statHotHours">Need more data</div>
-        <div class="stat-note">Best two hour window by average hourly earnings.</div>
+        <div class="stat-note">Best two hour window so far.</div>
       </div>
     </div>
   </section>
@@ -551,8 +551,8 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const STORAGE_KEY = "shiftintel_runs_v4";
-  const ACTIVE_RUN_KEY = "shiftintel_active_run_v4";
+  const STORAGE_KEY = "shiftintel_runs_v5";
+  const ACTIVE_RUN_KEY = "shiftintel_active_run_v5";
   const SHIFT_KEY = "shiftintel_shifts_v1";
 
   const dateEl = document.getElementById("date");
@@ -568,7 +568,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const notesEl = document.getElementById("notes");
   const entriesList = document.getElementById("entriesList");
   const runningLabel = document.getElementById("runningLabel");
-  const autoTimeInfo = document.getElementById("autoTimeInfo"); // not present, kept for legacy safety
 
   const statTotal = document.getElementById("statTotal");
   const statPerHour = document.getElementById("statPerHour");
@@ -680,6 +679,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return h + ":" + m;
   }
 
+  // Fixed: only treat as overnight when end is strictly earlier than start.
   function calcHours(start, end) {
     if (!start || !end) return 0;
     const partsS = start.split(":");
@@ -697,10 +697,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let startMin = sh * 60 + sm;
     let endMin = eh * 60 + em;
-    if (endMin <= startMin) {
+
+    if (endMin < startMin) {
       endMin += 24 * 60;
     }
-    return (endMin - startMin) / 60;
+
+    const diff = endMin - startMin;
+    if (diff <= 0) return 0;
+
+    return diff / 60;
   }
 
   function parseDateOnly(str) {
@@ -710,8 +715,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getWeekStart(d) {
     const date = new Date(d.getTime());
-    const day = date.getDay(); // 0 Sun, 1 Mon
-    const diff = (day + 6) % 7; // make Monday day 0
+    const day = date.getDay(); // 0 Sun
+    const diff = (day + 6) % 7; // Monday as day 0
     date.setDate(date.getDate() - diff);
     date.setHours(0, 0, 0, 0);
     return date;
@@ -771,8 +776,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const shiftEntries = entries.filter(e => e.date === activeDate);
-    const shiftEarn = shiftEntries.reduce((sum, e) => sum + e.earnings, 0);
-    const shiftHours = shiftEntries.reduce((sum, e) => sum + e.hours, 0);
+    let shiftEarn = 0;
+    let shiftHours = 0;
+
+    shiftEntries.forEach(e => {
+      const h = calcHours(e.start, e.end);
+      shiftEarn += e.earnings || 0;
+      shiftHours += h;
+    });
 
     const dollarsPerKm = km > 0 ? (shiftEarn / km).toFixed(2) : "0.00";
     const kmPerHour = shiftHours > 0 ? (km / shiftHours).toFixed(1) : "0.0";
@@ -784,8 +795,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     shiftKmStatsEl.textContent =
-      km.toFixed(1) + " km | $" + shiftEarn.toFixed(2) + " (" +
-      dollarsPerKm + " $/km) | " + kmPerHour + " km/hr" + fuelText;
+      km.toFixed(1) + " km | $" + shiftEarn.toFixed(2) +
+      " (" + dollarsPerKm + " $/km) | " +
+      kmPerHour + " km/hr" + fuelText;
   }
 
   function render() {
@@ -814,7 +826,7 @@ document.addEventListener("DOMContentLoaded", () => {
             day: "numeric"
           });
 
-          const h = e.hours || 0;
+          const h = calcHours(e.start, e.end);
           const rate = h > 0 ? e.earnings / h : 0;
           const typeLabel =
             e.auto === true
@@ -822,7 +834,6 @@ document.addEventListener("DOMContentLoaded", () => {
               : e.auto === false
               ? "Manual log"
               : "Legacy";
-
           const durLabel = h > 0 ? h.toFixed(2) + "h" : "";
 
           row.innerHTML = `
@@ -909,7 +920,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Stats: today (active date), week, all time
+    // Stats: today (active date), week, all time based on recomputed durations
     let total = 0;
     let totalHours = 0;
 
@@ -931,35 +942,38 @@ document.addEventListener("DOMContentLoaded", () => {
       const d = parseDateOnly(e.date);
       if (!d) return;
 
-      total += e.earnings;
-      totalHours += e.hours;
+      const h = calcHours(e.start, e.end);
+      if (h <= 0) return;
+
+      const earn = e.earnings || 0;
+
+      total += earn;
+      totalHours += h;
 
       if (e.app) {
         if (!byApp[e.app]) byApp[e.app] = { earnings: 0, hours: 0 };
-        byApp[e.app].earnings += e.earnings;
-        byApp[e.app].hours += e.hours;
+        byApp[e.app].earnings += earn;
+        byApp[e.app].hours += h;
       }
 
-      if (e.start && e.end && e.hours > 0) {
+      if (e.start) {
         const parts = e.start.split(":");
         const sh = parseInt(parts[0], 10);
         if (!Number.isNaN(sh)) {
           if (!hourBuckets[sh]) hourBuckets[sh] = { earnings: 0, hours: 0 };
-          hourBuckets[sh].earnings += e.earnings;
-          hourBuckets[sh].hours += e.hours;
+          hourBuckets[sh].earnings += earn;
+          hourBuckets[sh].hours += h;
         }
       }
 
-      // Today (active date)
       if (e.date === activeDateStr) {
-        todayEarn += e.earnings;
-        todayHours += e.hours;
+        todayEarn += earn;
+        todayHours += h;
       }
 
-      // Week containing active date
       if (d >= weekStart && d < weekEnd) {
-        weekEarn += e.earnings;
-        weekHours += e.hours;
+        weekEarn += earn;
+        weekHours += h;
       }
     });
 
@@ -1025,7 +1039,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Running label
-    if (activeRun && activeRun.startTs && !editingIndex) {
+    if (activeRun && activeRun.startTs && editingIndex === null) {
       const started = new Date(activeRun.startTs);
       const app = activeRun.app || selectedApp;
       runningLabel.textContent =
@@ -1033,7 +1047,7 @@ document.addEventListener("DOMContentLoaded", () => {
         app +
         " since " +
         started.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    } else if (!editingIndex) {
+    } else if (editingIndex === null) {
       runningLabel.textContent = "";
     }
 
@@ -1047,7 +1061,7 @@ document.addEventListener("DOMContentLoaded", () => {
         appButtons.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedApp = btn.dataset.app;
-        if (activeRun && activeRun.startTs && !editingIndex) {
+        if (activeRun && activeRun.startTs && editingIndex === null) {
           runningLabel.textContent =
             "Running " +
             selectedApp +
@@ -1061,7 +1075,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Date changes view and shift context
+  // Date change
   dateEl.addEventListener("change", () => {
     syncShiftUI();
     render();
@@ -1106,11 +1120,11 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  // End run, save or edit
+  // End run or save edit
   endRunBtn.addEventListener("click", () => {
     const entries = loadEntries();
 
-    // Edit existing entry
+    // Editing existing run
     if (editingIndex !== null) {
       const idx = editingIndex;
 
@@ -1146,7 +1160,6 @@ document.addEventListener("DOMContentLoaded", () => {
         earnings,
         orders,
         notes,
-        hours,
         auto: false
       };
       saveEntries(entries);
@@ -1164,7 +1177,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // New entry using active run or manual times
+    // New run
     const now = new Date();
     let usingAuto = false;
 
@@ -1185,9 +1198,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       start = startEl.value;
       end = endEl.value || formatTimeForInput(now);
-
       if (!start || !end) {
-        alert("Use Start/End or fill start and end manually.");
+        alert("Use Start and End, or fill both times manually.");
         return;
       }
       usingAuto = false;
@@ -1216,7 +1228,6 @@ document.addEventListener("DOMContentLoaded", () => {
       earnings,
       orders,
       notes,
-      hours,
       auto: usingAuto
     });
     saveEntries(entries);
@@ -1260,7 +1271,6 @@ document.addEventListener("DOMContentLoaded", () => {
     render();
   });
 
-  // Init
   setTodayIfEmpty();
   syncShiftUI();
   render();
