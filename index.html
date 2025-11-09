@@ -138,7 +138,7 @@
       transform: translateY(-1px);
     }
 
-    .app-btn:hover:not(.active)) {
+    .app-btn:hover:not(.active) {
       border-color: var(--accent);
       color: var(--accent);
       transform: translateY(-1px);
@@ -508,7 +508,6 @@
       background: rgba(148,163,253,0.9);
     }
 
-    /* On Duty timer */
     .timer-wrap {
       display: flex;
       align-items: baseline;
@@ -528,7 +527,6 @@
       color: var(--accent);
     }
 
-    /* Modal */
     .modal-backdrop {
       position: fixed;
       inset: 0;
@@ -635,7 +633,7 @@
   <header class="header">
     <div class="title">ShiftIntel</div>
     <div class="subtitle">
-      Start shift, see a live timer, log runs fast, and track performance by shift, week, and all time.
+      Start shift, see live timer, log runs fast, and track performance by shift, week, and all time.
     </div>
     <div class="pill-row">
       <div class="pill">Shift / Week / All time</div>
@@ -690,7 +688,7 @@
       </div>
     </div>
     <div id="shiftKmStats" class="shift-summary">
-      Set shift start, and optionally end, plus km, and this will track distance, efficiency, and shift length.
+      Set shift start, and optionally end and km. This tracks distance, efficiency, and true shift length.
     </div>
   </section>
 
@@ -704,8 +702,8 @@
     </div>
     <div id="runningLabel" class="running-label"></div>
     <div class="helper">
-      When you hit End, choose to log the full block or a 10 / 20 / 30 minute run based on the Start time.
-      Shift start is set the first time you hit Start for the day, so day averages can use true shift time.
+      End gives options: log full block or a 10 / 20 / 30 minute run from the Start time.
+      First Start of the day sets the shift start time, so averages can use real on duty time.
     </div>
     <div class="btn-row">
       <button class="btn-primary" id="startRunBtn">Start</button>
@@ -717,7 +715,7 @@
   <!-- Manual / edit run form -->
   <section class="card">
     <div class="card-label">Manual or edit entry</div>
-    <div class="section-title">Use this if you need to correct or custom log a run</div>
+    <div class="section-title">Use this to correct or manually log a run</div>
     <div class="field-grid">
       <div class="field">
         <label for="earnings">Run earnings ($)</label>
@@ -741,7 +739,7 @@
       </div>
     </div>
     <div class="helper">
-      Editing a run will load its values here. Save changes using the End button.
+      Editing a run loads it here. Save with the End button.
     </div>
   </section>
 
@@ -762,18 +760,18 @@
           Today $0.0 | Week $0.0 | All $0.0
         </div>
         <div class="stat-note">
-          Shows run based rate, and when shift times are set, also shift based rate for today.
+          Shows run based hourly. When shift times exist, also shows shift based hourly for today.
         </div>
       </div>
       <div class="stat">
         <div class="stat-label">Top app</div>
         <div class="stat-value" id="statTopApp">None</div>
-        <div class="stat-note">Based on hourly earnings, not number of pings.</div>
+        <div class="stat-note">Based on hourly earnings, not request count.</div>
       </div>
       <div class="stat">
         <div class="stat-label">Hot hours</div>
         <div class="stat-value" id="statHotHours">Need more data</div>
-        <div class="stat-note">Best 2 hour window so far from your history.</div>
+        <div class="stat-note">Best 2 hour window from your history.</div>
       </div>
     </div>
   </section>
@@ -786,7 +784,7 @@
       <button class="analytics-tab" data-view="apps">App share</button>
     </div>
     <div id="analyticsContent" class="analytics-content">
-      <div class="helper">Charts activate once you have logged some runs.</div>
+      <div class="helper">Charts show up once you have logged some runs.</div>
     </div>
   </section>
 
@@ -795,7 +793,7 @@
     <div class="card-label">Recent runs</div>
     <div class="entries-card" id="entriesList">
       <div class="helper">
-        Shows "Today so far" plus each run: date, app, times, duration, hourly rate, type, notes, edit and remove.
+        Includes a Today so far summary plus each run: date, app, times, duration (h/m), rate, type, notes, edit and remove.
       </div>
     </div>
   </section>
@@ -1047,22 +1045,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateShiftStats();
-    render(); // to refresh shift based metrics
+    render();
   }
 
   function calcShiftHoursForDate(dateStr) {
     const shift = getShift(dateStr);
     if (!shift || !shift.startTime) return 0;
 
-    let endTimeStr = null;
-
+    let endTimeStr;
     if (shift.endTime) {
       endTimeStr = shift.endTime;
     } else if (dateStr === todayStr()) {
       endTimeStr = formatTimeForInput(new Date());
+    } else {
+      return 0;
     }
-
-    if (!endTimeStr) return 0;
 
     return calcHours(shift.startTime, endTimeStr);
   }
@@ -1074,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!shift || shift.startKm == null || shift.endKm == null) {
       shiftKmStatsEl.textContent =
-        "Add shift start and end km to see distance, dollars per km, and shift duration.";
+        "Add shift km to see distance, dollars per km, and efficiency.";
       return;
     }
 
@@ -1106,10 +1103,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let shiftTimePart = "";
     const shiftHours = calcShiftHoursForDate(activeDate);
     if (shiftHours > 0) {
+      const startLabel = shift.startTime || "";
+      const endLabel = shift.endTime ? shift.endTime : "now";
       shiftTimePart =
-        " | Shift " +
-        (shift.startTime || "") +
-        (shift.endTime ? " - " + shift.endTime : " - now") +
+        " | Shift " + startLabel + " - " + endLabel +
         " (" + formatDurationHM(shiftHours) + ")";
     }
 
@@ -1153,7 +1150,8 @@ document.addEventListener("DOMContentLoaded", () => {
     modalSummary.textContent = summaryText;
     modalBackdrop.style.display = "flex";
 
-    modalOptionButtons().forEach(btn => {
+    const optionButtons = modalOptionButtons();
+    optionButtons.forEach(btn => {
       const handler = () => {
         const mode = btn.dataset.mode;
         closeEndModal();
@@ -1210,7 +1208,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const max = Math.max(...daily, 0.01);
 
       const title = document.createElement("div");
-      title.textContent = "Earnings this week (by day)";
+      title.textContent = "Earnings this week by day";
       analyticsContent.appendChild(title);
 
       const wrap = document.createElement("div");
@@ -1239,7 +1237,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "Helps spot which days actually pay.";
+      note.textContent = "Shows which days are worth logging in.";
       analyticsContent.appendChild(note);
     }
 
@@ -1308,7 +1306,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "If one app is tiny, reconsider your loyalty.";
+      note.textContent = "If one app is tiny, stop babysitting it.";
       analyticsContent.appendChild(note);
     }
   }
@@ -1321,10 +1319,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const weekEnd = new Date(weekStart.getTime());
     weekEnd.setDate(weekEnd.getDate() + 7);
 
-    const shift = getShift(activeDateStr);
     const shiftHoursForActive = calcShiftHoursForDate(activeDateStr);
 
-    // Recent runs and "Today so far"
+    // Recent runs and Today so far
     entriesList.innerHTML = "";
 
     if (!entries.length) {
@@ -1338,6 +1335,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (todaysEntries.length) {
         let cumEarn = 0;
         let cumHours = 0;
+
         todaysEntries.forEach(e => {
           const h = calcHours(e.start, e.end);
           if (h > 0) {
@@ -1347,26 +1345,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const runAvg = cumHours > 0 ? cumEarn / cumHours : 0;
-        const summaryRow = document.createElement("div");
-        summaryRow.className = "entry-row summary";
 
-        let labelDur = formatDurationHM(cumHours);
-        let labelRate = "$" + cumEarn.toFixed(2) +
-          (runAvg > 0 ? " (" + runAvg.toFixed(1) + "/hr runs" : "") +
-          ")";
-
+        let labelRate;
         if (shiftHoursForActive > 0 && cumEarn > 0) {
           const shiftRate = cumEarn / shiftHoursForActive;
           labelRate =
             "$" + cumEarn.toFixed(2) +
             " (" + runAvg.toFixed(1) + "/hr runs, " +
             shiftRate.toFixed(1) + "/hr shift)";
+        } else if (runAvg > 0) {
+          labelRate =
+            "$" + cumEarn.toFixed(2) +
+            " (" + runAvg.toFixed(1) + "/hr runs)";
+        } else {
+          labelRate = "$" + cumEarn.toFixed(2);
         }
 
+        const summaryRow = document.createElement("div");
+        summaryRow.className = "entry-row summary";
         summaryRow.innerHTML = `
           <span class="main">Today so far</span>
           <span class="app">${todaysEntries.length} runs</span>
-          <span class="time">${labelDur || "-"}</span>
+          <span class="time">${formatDurationHM(cumHours) || "-"}</span>
           <span class="dur">${labelRate}</span>
         `;
         entriesList.appendChild(summaryRow);
@@ -1379,7 +1379,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const d = parseDateOnly(e.date);
         const dateLabel = d
           ? d.toLocaleDateString(undefined, { month: "short", day: "numeric" })
-          : e.date || "";
+          : (e.date || "");
 
         const h = calcHours(e.start, e.end);
         const rate = h > 0 && e.earnings ? e.earnings / h : 0;
@@ -1449,7 +1449,7 @@ document.addEventListener("DOMContentLoaded", () => {
           stopTimer();
 
           runningLabel.textContent =
-            "Editing existing run. Adjust fields, then press End to save changes.";
+            "Editing run. Adjust fields, then press End to save.";
           endRunBtn.textContent = "Save changes";
         };
         row.appendChild(edit);
@@ -1474,7 +1474,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Stats based on runs
+    // Stats
     let total = 0;
     let totalHours = 0;
     let todayEarn = 0;
@@ -1746,7 +1746,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Active run uses modal
+    // Active run assembled through modal
     if (activeRun && activeRun.startTs) {
       const startDate = new Date(activeRun.startTs);
       const now = new Date();
