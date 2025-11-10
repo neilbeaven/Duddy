@@ -63,8 +63,9 @@
       max-width: 520px;
       width: 100%;
       border-radius: 999px;
-      background: radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 60%) no-repeat,
-                  rgba(3,7,18,0.98);
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.12), transparent 60%) no-repeat,
+        rgba(3,7,18,0.98);
       box-shadow: 0 12px 40px rgba(15,23,42,0.9);
       border: 1px solid rgba(56,189,248,0.24);
       display: flex;
@@ -395,7 +396,7 @@
       font-size: 0.66rem;
       color: var(--muted);
       margin-top: 2px;
-      max-width: 200px;
+      max-width: 220px;
     }
 
     /* Entries */
@@ -698,6 +699,12 @@
     <div id="shiftKmStats" class="shift-summary">
       Use this block when parked. On duty bar above shows live status.
     </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="finalizeDayBtn">Finalize this day &amp; download CSV</button>
+    </div>
+    <div class="helper">
+      Uses selected date above. File opens in Excel, Sheets or Numbers.
+    </div>
   </section>
 
   <!-- Run control -->
@@ -705,7 +712,7 @@
     <div class="card-label">Runs</div>
     <div class="section-title">Start a run, then end with one tap</div>
     <div class="helper">
-      Runs are chunks inside your shift. Start once, then end with End or a quick 10 / 20 / 30 minute patch.
+      Runs are chunks inside your shift. Start once, finish with End or a 10 / 20 / 30 quick button.
     </div>
     <div class="btn-row">
       <button class="btn-primary" id="startRunBtn">Start run</button>
@@ -760,7 +767,9 @@
         <div class="stat-value" id="statTotal">
           Today $0.00 | Week $0.00 | All $0.00
         </div>
-        <div class="stat-note">Based on all logged runs for the selected date and range.</div>
+        <div class="stat-note">
+          Based on all logged runs for the selected date and ranges.
+        </div>
       </div>
       <div class="stat">
         <div class="stat-label">Avg $ / hour</div>
@@ -768,7 +777,7 @@
           Today $0.0 | Week $0.0 | All $0.0
         </div>
         <div class="stat-note">
-          Uses run time. When shift is set, also compares against true shift hourly.
+          Uses run time. If shift times exist, also shows true shift hourly.
         </div>
       </div>
       <div class="stat">
@@ -792,7 +801,9 @@
       <button class="analytics-tab" data-view="apps">App share</button>
     </div>
     <div id="analyticsContent" class="analytics-content">
-      <div class="helper">Scroll down here when parked. Charts light up once you have runs.</div>
+      <div class="helper">
+        Scroll here when parked. Charts light up once you have some runs.
+      </div>
     </div>
   </section>
 
@@ -801,7 +812,7 @@
     <div class="card-label">Recent runs</div>
     <div class="entries-card" id="entriesList">
       <div class="helper">
-        Shows a Today summary plus each run. Duration is h/m, one run per event.
+        Shows a Today summary plus each run. Duration uses hours and minutes.
       </div>
     </div>
   </section>
@@ -813,12 +824,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const ACTIVE_RUN_KEY = "duddy_active_run_v1";
   const SHIFTS_KEY = "duddy_shifts_v1";
 
-  // Elements
+  // Top bar
   const dutyBadge = document.getElementById("dutyBadge");
   const dutyInfo = document.getElementById("dutyInfo");
   const dutyHint = document.getElementById("dutyHint");
   const dutyToggleBtn = document.getElementById("dutyToggleBtn");
 
+  // Shift
   const dateEl = document.getElementById("date");
   const shiftStartTimeEl = document.getElementById("shiftStartTime");
   const shiftEndTimeEl = document.getElementById("shiftEndTime");
@@ -826,28 +838,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const shiftEndKmEl = document.getElementById("shiftEndKm");
   const shiftFuelEl = document.getElementById("shiftFuel");
   const shiftKmStatsEl = document.getElementById("shiftKmStats");
+  const finalizeDayBtn = document.getElementById("finalizeDayBtn");
 
+  // App selection
   const appButtons = Array.from(document.querySelectorAll("#appButtons .app-btn"));
 
+  // Manual form
   const startEl = document.getElementById("start");
   const endEl = document.getElementById("end");
   const earningsEl = document.getElementById("earnings");
   const ordersEl = document.getElementById("orders");
   const notesEl = document.getElementById("notes");
 
+  // Run controls
   const startRunBtn = document.getElementById("startRunBtn");
   const endRunFullBtn = document.getElementById("endRunFullBtn");
   const patchButtons = Array.from(document.querySelectorAll(".btn-patch"));
   const clearAllBtn = document.getElementById("clearAllBtn");
   const runStatusEl = document.getElementById("runStatus");
 
+  // Recent runs
   const entriesList = document.getElementById("entriesList");
 
+  // Stats
   const statTotal = document.getElementById("statTotal");
   const statPerHour = document.getElementById("statPerHour");
   const statTopApp = document.getElementById("statTopApp");
   const statHotHours = document.getElementById("statHotHours");
 
+  // Analytics
   const analyticsTabs = Array.from(document.querySelectorAll(".analytics-tab"));
   const analyticsContent = document.getElementById("analyticsContent");
 
@@ -855,11 +874,10 @@ document.addEventListener("DOMContentLoaded", () => {
   let selectedApp = "Uber Eats";
   let activeRun = loadActiveRun();
   let editingIndex = null;
-
   let shiftTimerInterval = null;
   let runTimerInterval = null;
 
-  // Helpers
+  // Utility functions
 
   function todayStr() {
     return new Date().toISOString().slice(0, 10);
@@ -920,7 +938,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const raw = localStorage.getItem(RUNS_KEY);
       return raw ? JSON.parse(raw) : [];
-    } catch {
+    } catch (e) {
+      console.error("loadRuns failed", e);
       return [];
     }
   }
@@ -929,7 +948,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       localStorage.setItem(RUNS_KEY, JSON.stringify(runs));
     } catch (e) {
-      console.error("Failed to save runs", e);
+      console.error("saveRuns failed", e);
     }
   }
 
@@ -937,7 +956,8 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const raw = localStorage.getItem(SHIFTS_KEY);
       return raw ? JSON.parse(raw) : [];
-    } catch {
+    } catch (e) {
+      console.error("loadShifts failed", e);
       return [];
     }
   }
@@ -946,7 +966,7 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       localStorage.setItem(SHIFTS_KEY, JSON.stringify(shifts));
     } catch (e) {
-      console.error("Failed to save shifts", e);
+      console.error("saveShifts failed", e);
     }
   }
 
@@ -992,7 +1012,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const obj = JSON.parse(raw);
       if (!obj || !obj.startTs) return null;
       return obj;
-    } catch {
+    } catch (e) {
+      console.error("loadActiveRun failed", e);
       return null;
     }
   }
@@ -1002,11 +1023,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!run) localStorage.removeItem(ACTIVE_RUN_KEY);
       else localStorage.setItem(ACTIVE_RUN_KEY, JSON.stringify(run));
     } catch (e) {
-      console.error("Failed to save active run", e);
+      console.error("saveActiveRun failed", e);
     }
   }
 
-  // Shift UI
+  // Shift UI and stats
 
   function syncShiftInputs() {
     const activeDate = dateEl.value || todayStr();
@@ -1050,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateShiftStats();
     updateDutyBar();
-    render(); // stats and list use shift info too
+    render();
   }
 
   function calcShiftHours(dateStr) {
@@ -1076,7 +1097,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!shift || shift.startKm == null || shift.endKm == null) {
       shiftKmStatsEl.textContent =
-        "Add km once in a while to see $ per km and fuel efficiency.";
+        "Add km to keep an eye on $ per km and fuel efficiency.";
       return;
     }
 
@@ -1089,6 +1110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const dayRuns = runs.filter(r => r.date === activeDate);
     let dayEarn = 0;
     let dayRunHours = 0;
+
     dayRuns.forEach(r => {
       const h = calcHours(r.start, r.end);
       if (h > 0) {
@@ -1130,21 +1152,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (shiftTimerInterval) clearInterval(shiftTimerInterval);
 
     function tick() {
-      const startParts = shift.startTime.split(":");
-      const sh = Number(startParts[0]);
-      const sm = Number(startParts[1]);
+      const parts = shift.startTime.split(":");
+      const sh = Number(parts[0]);
+      const sm = Number(parts[1]);
       if (Number.isNaN(sh) || Number.isNaN(sm)) return;
+
       const now = new Date();
       const start = new Date(now);
       start.setHours(sh, sm, 0, 0);
       if (now < start) {
         start.setDate(start.getDate() - 1);
       }
+
       const diffSec = Math.max(0, Math.floor((now - start) / 1000));
       const h = Math.floor(diffSec / 3600).toString().padStart(2, "0");
       const m = Math.floor((diffSec % 3600) / 60).toString().padStart(2, "0");
+
       dutyInfo.textContent =
-        "On duty since " + shift.startTime + " ▪ " + h + ":" + m + " so far";
+        "On duty since " + shift.startTime + " • " + h + ":" + m + " so far";
     }
 
     tick();
@@ -1163,9 +1188,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (onDutyShift && onDutyShift.startTime) {
       dutyBadge.textContent = "ON DUTY";
       dutyBadge.classList.remove("off");
-      dutyInfo.textContent =
-        "On duty since " + onDutyShift.startTime;
-      dutyHint.textContent = "Duddy uses this for real shift hourly. Off duty when you are done.";
+      dutyHint.textContent =
+        "Duddy uses this for real shift hourly. Off duty when you are done.";
       dutyToggleBtn.textContent = "Off duty";
       dutyToggleBtn.classList.remove("off");
       startShiftTimer(onDutyShift);
@@ -1188,7 +1212,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // Turning off
       const now = new Date();
       const suggested = formatTimeForInput(now);
-      const val = prompt("Shift end time for " + currentOn.date + " (HH:MM)", suggested);
+      const val = prompt(
+        "Shift end time for " + currentOn.date + " (HH:MM)",
+        suggested
+      );
       if (val === null || val.trim() === "") {
         return;
       }
@@ -1232,7 +1259,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const s = (diff % 60).toString().padStart(2, "0");
       runStatusEl.textContent =
         "Active run for " + (activeRun.app || selectedApp) +
-        " ▪ " + h + ":" + m + ":" + s;
+        " • " + h + ":" + m + ":" + s;
     }
 
     tick();
@@ -1247,10 +1274,109 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // CSV export
+
+  function exportDayCsv(dateStr) {
+    const runs = loadRuns();
+    const shift = getShift(dateStr);
+    const dayRuns = runs.filter(r => r.date === dateStr);
+
+    if (!dayRuns.length && !shift) {
+      alert("No data for this date to export.");
+      return;
+    }
+
+    const rows = [];
+
+    rows.push([
+      "Date",
+      "App",
+      "Start",
+      "End",
+      "Duration (h:m)",
+      "Earnings",
+      "Orders",
+      "Type",
+      "Notes"
+    ]);
+
+    dayRuns.forEach(r => {
+      const h = calcHours(r.start, r.end);
+      const durHM = formatDurationHM(h);
+      const typeLabel =
+        r.quick
+          ? "Quick patch"
+          : r.auto === true
+          ? "Auto"
+          : r.auto === false
+          ? "Manual"
+          : "Legacy";
+
+      rows.push([
+        r.date || "",
+        r.app || "",
+        r.start || "",
+        r.end || "",
+        durHM || "",
+        r.earnings != null ? String(r.earnings) : "",
+        r.orders != null ? String(r.orders) : "",
+        typeLabel,
+        r.notes ? r.notes.replace(/\r?\n/g, " ") : ""
+      ]);
+    });
+
+    rows.push([]);
+
+    if (shift) {
+      rows.push(["Shift summary"]);
+      rows.push(["Date", shift.date || ""]);
+      rows.push(["Shift start", shift.startTime || ""]);
+      rows.push(["Shift end", shift.endTime || ""]);
+      rows.push(["Start km", shift.startKm != null ? shift.startKm : ""]);
+      rows.push(["End km", shift.endKm != null ? shift.endKm : ""]);
+      rows.push(["Fuel (L)", shift.fuel != null ? shift.fuel : ""]);
+
+      if (shift.startKm != null && shift.endKm != null && shift.endKm > shift.startKm) {
+        const km = shift.endKm - shift.startKm;
+        const runsTotal = dayRuns.reduce((s, r) => s + (r.earnings || 0), 0);
+        const dollarsPerKm = km > 0 ? (runsTotal / km).toFixed(2) : "";
+        rows.push(["Total km", km.toFixed(1)]);
+        rows.push(["Total run earnings", runsTotal.toFixed(2)]);
+        rows.push(["$/km", dollarsPerKm]);
+      }
+    }
+
+    const csv = rows
+      .map(cols =>
+        cols
+          .map(v => {
+            const val = v == null ? "" : String(v);
+            if (/[",\n]/.test(val)) {
+              return '"' + val.replace(/"/g, '""') + '"';
+            }
+            return val;
+          })
+          .join(",")
+      )
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "duddy-" + dateStr + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   // Analytics
 
   function renderAnalytics(runs) {
     const activeTab = analyticsTabs.find(t => t.classList.contains("active"));
+    if (!activeTab) return;
     analyticsContent.innerHTML = "";
 
     if (!runs.length) {
@@ -1271,6 +1397,7 @@ document.addEventListener("DOMContentLoaded", () => {
       weekEnd.setDate(weekEnd.getDate() + 7);
 
       const daily = [0, 0, 0, 0, 0, 0, 0];
+
       runs.forEach(r => {
         if (!r.date) return;
         const d = parseDateOnly(r.date);
@@ -1314,7 +1441,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "Glance to see which days are actually worth logging in.";
+      note.textContent = "Fast way to see which days are paying and which are cosplay.";
       analyticsContent.appendChild(note);
     }
 
@@ -1383,7 +1510,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const note = document.createElement("div");
       note.className = "helper";
-      note.textContent = "If one app is leeching, this will expose it.";
+      note.textContent = "If one app is tiny, stop giving it free rent in your brain.";
       analyticsContent.appendChild(note);
     }
   }
@@ -1397,10 +1524,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const weekStart = getWeekStart(activeDate);
     const weekEnd = new Date(weekStart.getTime());
     weekEnd.setDate(weekEnd.getDate() + 7);
-
     const shiftHoursForActive = calcShiftHours(activeDateStr);
 
-    // Recent runs and today summary
     entriesList.innerHTML = "";
 
     if (!runs.length) {
@@ -1560,12 +1685,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const byApp = {};
     const hourBuckets = {};
 
+    const runs = loadRuns();
+
     runs.forEach(r => {
       if (!r.date) return;
       const d = parseDateOnly(r.date);
       if (!d) return;
+
       const h = calcHours(r.start, r.end);
       if (h <= 0) return;
+
       const earn = r.earnings || 0;
 
       total += earn;
@@ -1670,7 +1799,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateShiftStats();
     renderAnalytics(runs);
 
-    // Run timer state
     if (activeRun && activeRun.startTs) {
       startRunTimer();
     } else if (editingIndex === null) {
@@ -1678,7 +1806,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // App selection
+  // Event wiring
+
   appButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       appButtons.forEach(b => b.classList.remove("active"));
@@ -1691,7 +1820,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Analytics tabs
   analyticsTabs.forEach(tab => {
     tab.addEventListener("click", () => {
       analyticsTabs.forEach(t => t.classList.remove("active"));
@@ -1700,21 +1828,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Date change
   dateEl.addEventListener("change", () => {
     syncShiftInputs();
     updateShiftStats();
     render();
   });
 
-  // Shift inputs
   [shiftStartTimeEl, shiftEndTimeEl, shiftStartKmEl, shiftEndKmEl, shiftFuelEl]
     .forEach(el => {
       el.addEventListener("change", updateShiftFromInputs);
       el.addEventListener("blur", updateShiftFromInputs);
     });
 
-  // Start run
+  if (finalizeDayBtn) {
+    finalizeDayBtn.addEventListener("click", () => {
+      const dateStr = dateEl.value || todayStr();
+      exportDayCsv(dateStr);
+    });
+  }
+
   startRunBtn.addEventListener("click", () => {
     if (editingIndex !== null) {
       alert("Finish editing or clear the form before starting a new run.");
@@ -1741,11 +1873,9 @@ document.addEventListener("DOMContentLoaded", () => {
     startRunTimer();
   });
 
-  // Finish run helper
   function finalizeRun(modeMins) {
     if (!activeRun || !activeRun.startTs) {
       if (editingIndex !== null) {
-        // Save edit using manual inputs
         const runs = loadRuns();
         const idx = editingIndex;
         const base = runs[idx];
@@ -1797,12 +1927,11 @@ document.addEventListener("DOMContentLoaded", () => {
         ordersEl.value = "";
         notesEl.value = "";
         runStatusEl.textContent = "No active run.";
-
         render();
         return;
       }
 
-      alert("No active run. Start run first, or edit using the manual form.");
+      alert("No active run. Start run first, or use the manual form to log one.");
       return;
     }
 
@@ -1831,7 +1960,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let earnings = 0;
     const input = prompt(
-      "Earnings for this run (optional, numbers only). Leave blank for zero.",
+      "Earnings for this run (optional). Leave blank for zero.",
       ""
     );
     if (input !== null && input.trim() !== "") {
@@ -1862,16 +1991,13 @@ document.addEventListener("DOMContentLoaded", () => {
     saveActiveRun(null);
     stopRunTimer();
     runStatusEl.textContent = "Run saved.";
-
     render();
   }
 
-  // End full run
   endRunFullBtn.addEventListener("click", () => {
     finalizeRun(null);
   });
 
-  // Patch buttons
   patchButtons.forEach(btn => {
     const mins = parseInt(btn.dataset.mins, 10);
     btn.addEventListener("click", () => {
@@ -1879,9 +2005,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Clear all
   clearAllBtn.addEventListener("click", () => {
-    const ok = confirm("Clear all Duddy data on this device");
+    const ok = confirm("Clear all Duddy data on this device?");
     if (!ok) return;
 
     saveRuns([]);
@@ -1889,6 +2014,7 @@ document.addEventListener("DOMContentLoaded", () => {
     activeRun = null;
     saveActiveRun(null);
     editingIndex = null;
+
     stopRunTimer();
     stopShiftTimer();
 
@@ -1910,7 +2036,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Init
-  if (!dateEl.value) dateEl.value = todayStr();
+  if (!dateEl.value) {
+    dateEl.value = todayStr();
+  }
   syncShiftInputs();
   updateDutyBar();
   render();
